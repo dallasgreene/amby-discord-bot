@@ -5,6 +5,7 @@ const config = require(configPath);
 const fsProm = require("fs").promises
 const token = require("./token_config.json");
 
+
 function sendMessage(msg, text) {
     msg.channel.send(text)
     .then(botMsg => console.log(`Sent message: ${botMsg.content}`));
