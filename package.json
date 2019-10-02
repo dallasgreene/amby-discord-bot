@@ -1,0 +1,15 @@
+{
+  "name": "All-Hail_Savion",
+  "version": "1.0.0",
+  "description": "Does Shit (and cum)",
+  "main": "bot.js",
+  "author": "Dallas Greene",
+  "dependencies": {
+    "discord.js": "^11.5.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "license": "ISC"
+}
