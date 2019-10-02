@@ -10,4 +10,4 @@
 *.zip
 
 node_modules
-config.json
+token_config.json
