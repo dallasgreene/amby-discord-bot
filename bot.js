@@ -124,12 +124,14 @@ client.on("message", msg => {
             const color = rest[1];
             if (color.includes("#") && color.length === 7) {
                 msg.member.colorRole.setColor(rest[0]);
+                sendMessage(msg, "Your new role color has been set");
             }
         }
 
         else if (rest[0] === "name") {
             const newName = rest.slice(1, rest.length).join(" ");
             msg.member.colorRole.setName(newName);
+            sendMessage(msg, `Your role name has been set to ${newName}`);
         }
     }
 
@@ -175,7 +177,7 @@ client.on("message", msg => {
             previous = config.fuckList;
             previous.push(name);
             updateList("fuckList", previous);
-            sendMessage(msg, "Added " + name + " to the fuck list.");
+            sendMessage(msg, `Added ${name} to the fuck list.`);
         }
     }
 
