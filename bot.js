@@ -2,15 +2,12 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const configPath = "./config.json";
 const config = require(configPath);
-const fsProm = require("fs").promises
+const fsProm = require("fs").promises;
 const token = require("./token_config.json");
+const message = require("./functions/message");
+const commandList = require("./commands/commandList");
 
-function sendMessage(msg, text) {
-    msg.channel.send(text)
-    .then(botMsg => console.log(`Sent message: ${botMsg.content}`));
-}
-
-function updateList(field, newList) {
+const updateList = (field, newList) => {
     let listString = "[";
     for (let name of newList) {
         listString += "\"" + name + "\", "
@@ -30,39 +27,16 @@ function updateList(field, newList) {
         console.log(`new config:\n${newConfig}`);
         fsProm.writeFile(configPath, newConfig);
     });
-}
+};
 
-function toString(list) {
+const toString = list => {
     let listString = "";
     for (let i = 0 ; i < list.length ; i ++) {
         listString += (i + 1).toString() + ". " + list[i] + "\n";
     }
     listString = listString.trim();
     return listString;
-}
-
-function spongeIt(message) {
-    message = message.toLowerCase();
-    let newMsg = "";
-    let lowercase = false;
-    for (let i = 0 ; i < message.length ; i ++) {
-        const char = message.substring(i, (i + 1));
-        if (char === " ") {
-            newMsg += char;
-        }
-        else {
-            const rand = Math.random();
-            if ((lowercase && rand < 0.9) || (!lowercase && rand >= 0.9)) {
-                newMsg += char.toUpperCase();
-            }
-            else if ((!lowercase && rand < 0.9) || (lowercase && rand >= 0.9)){
-                newMsg += char.toLowerCase();
-            }
-            lowercase = !lowercase;
-        }
-    }
-    return newMsg;
-}
+};
 
 let lastCommand = "none";
 
@@ -79,14 +53,14 @@ client.on("message", msg => {
 
     if(msg.member.id === config.nate) {
         if (Math.random() < 0.01) {
-            sendMessage(msg, "idiot.");
+            message.send(msg, "idiot.");
         }
         return;
     }
 
     if(msg.member.id === config.josh) {
         if (Math.random() < 0.01) {
-            sendMessage(msg, "josh im ordering a pizza to your house what do you want?");
+            message.send(msg, "josh im ordering a pizza to your house what do you want?");
         }
         return;
     }
@@ -97,7 +71,7 @@ client.on("message", msg => {
     // array of everything after the prefix defined in the config
     const rest = msg.content.substring(config.prefix.length).trim().split(" ");
 
-    // the command that was recieved by the bot, (also removes it from the array of everything after prefix)
+    // the command that was received by the bot, (also removes it from the array of everything after prefix)
     const command = rest.shift().toLowerCase();
 
     // debugging:
@@ -105,95 +79,34 @@ client.on("message", msg => {
     console.log(`Set command: \"${command}\"`);
 
     if (command === lastCommand) {
-        sendMessage(msg, "alright whatever")
+        message.send(msg.channel, "alright whatever");
     }
     else if (Math.random() < 0.05) {
         const responsesList = config.genericResponses;
-        const response = responsesList[Math.floor(Math.random() * responsesList.length)]
-        sendMessage(msg, response);
+        const response = responsesList[Math.floor(Math.random() * responsesList.length)];
+        message.send(msg.channel, response);
         lastCommand = command;
         return;
     }
-
-    if (command === "hey") {
-        sendMessage(msg, "leave me alone.");
+    else {
+        lastCommand = "none";
     }
 
-    else if (command === "role") {
-        if (rest.length === 2 && rest[0] === "color") {
-            const color = rest[1];
-            if (color.includes("#") && color.length === 7) {
-                msg.member.colorRole.setColor(rest[0]);
-                sendMessage(msg, "Your new role color has been set");
-            }
-        }
-
-        else if (rest[0] === "name") {
-            const newName = rest.slice(1, rest.length).join(" ");
-            msg.member.colorRole.setName(newName);
-            sendMessage(msg, `Your role name has been set to ${newName}`);
-        }
+    try {
+        commandList[command](msg, rest);
+    } catch(TypeError) {
+        lastCommand = "none";
+        const response = message.spongeIt(msg.content.substring(config.prefix.length)) + " thats not even a thing dumb dumb";
+        message.send(msg.channel, response);
     }
+    return;
 
-    else if (command === "emoji") {
-        if (rest.length === 1) {
-            const name = rest[0];
-            msg.guild.createEmoji(msg.attachments.first().url, name);
-        }
-    }
-
-    else if (command === "play") {
-        const game = rest.join(" ");
-        if (game.toLowerCase().includes("civ") || game.toLowerCase().includes("fallout")) {
-            sendMessage(msg, "shut up oliver. " + game + " is a cool game but like, leave me alone.");
-        }
-        else {
-            sendMessage(msg, "shut up oliver. " + game + " is stupid.");
-        }
-    }
-
-    else if (command === "add") {
-        idIndex = rest.indexOf("to") + 1;
-
-        if (idIndex === 0) return;
-
-        if (rest[idIndex] === "the") idIndex ++;
-
-        const name = rest.slice(0, rest.indexOf("to")).join(" ");
-
-        if (rest[idIndex] === "adam") {
-            previous = config.adamSandlerList;
-            previous.push(name);
-            updateList("adamSandlerList", previous);
-            sendMessage(msg, "Added " + name + " to the Adam Sandler List. His days are numbered.");
-        }
-
-        if (rest[idIndex] === "fuck") {
-            if (!config.approvedFuckListers.includes(msg.member.id)) {
-                sendMessage(msg, "That's too much power for one man, and that's why I gave it to Josh.");
-                lastCommand = "none";
-                return;
-            }
-            previous = config.fuckList;
-            previous.push(name);
-            updateList("fuckList", previous);
-            sendMessage(msg, `Added ${name} to the fuck list.`);
-        }
-    }
-
-    else if (command === "adam") {
-        sendMessage(msg, toString(config.adamSandlerList));
+    if (command === "adam") {
+        message.send(msg.channel, toString(config.adamSandlerList));
     }
 
     else if (command === "fuck") {
-        sendMessage(msg, toString(config.fuckList));
-    }
-
-    else {
-        lastCommand = "none";
-        const response = spongeIt(msg.content.substring(config.prefix.length)) + " thats not even a thing dumb dumb";
-        sendMessage(msg, response);
-        return;
+        message.send(msg.channel, toString(config.fuckList));
     }
 });
 
