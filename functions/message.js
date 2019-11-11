@@ -5,6 +5,7 @@ module.exports = {
     },
     spongeIt: message => {
         message = message.toLowerCase();
+	console.log(message);
         let newMsg = "";
         let lowercase = false;
         for (let i = 0 ; i < message.length ; i ++) {
