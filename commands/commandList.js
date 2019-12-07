@@ -17,5 +17,5 @@ module.exports = {
     grind: (msg, rest) => grind.go(msg.channel, rest),
     stop: (msg, rest) => stop.go(msg.channel, rest),
     echo: (msg, rest) => echo.go(msg.channel, rest),
-    get: (msg, rest) => get.go(msg.channel, rest)
+    get: (msg, rest) => get.go(msg, rest)
 };
