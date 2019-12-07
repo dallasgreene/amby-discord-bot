@@ -44,7 +44,7 @@ module.exports = {
         let roleName = null;
 
         if (rest.includes("color")) {
-            roleName = rest.splice(0, rest.indexOf("color"));
+            roleName = rest.splice(0, rest.indexOf("color")).join(" ");
             roleName = roleName.join(" ");
             changeColor(msg, rest, roleName);
         }
