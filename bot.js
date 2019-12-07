@@ -55,14 +55,14 @@ client.on("message", msg => {
 
     if(msg.member.id === config.nate) {
         if (Math.random() < 0.01) {
-            message.send(msg, "idiot.");
+            message.send(msg.channel, "idiot.");
         }
         return;
     }
 
     if(msg.member.id === config.josh) {
         if (Math.random() < 0.01) {
-            message.send(msg, "josh im ordering a pizza to your house what do you want?");
+            message.send(msg.channel, "josh im ordering a pizza to your house what do you want?");
         }
         return;
     }
