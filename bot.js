@@ -40,6 +40,8 @@ const toString = list => {
 
 let lastCommand = "none";
 
+let grindingId = null;
+
 // start bot
 client.on("ready", () => {
     console.log(`Ya boi ${client.user.tag} is in this bitch.`);
@@ -92,12 +94,24 @@ client.on("message", msg => {
         lastCommand = "none";
     }
 
+    let commandResponse;
+    if (command === "grind" && grindingId !== null) return;
+    if (command === "stop" && grindingId !== null) {
+        clearInterval(grindingId);
+        grindingId = null;
+        return;
+    }
+
     try {
-        commandList[command](msg, rest);
+        commandResponse = commandList[command](msg, rest);
     } catch(TypeError) {
         lastCommand = "none";
-        const response = message.spongeIt(msg.content.substring(config.prefix.length)) + " thats not even a thing dumb dumb";
+        const response = `${message.spongeIt(msg.content.substring(config.prefix.length))} thats not even a thing dumb dumb`;
         message.send(msg.channel, response);
+    }
+
+    if (command === "grind" && commandResponse) {
+        grindingId = commandResponse;
     }
     return;
 
