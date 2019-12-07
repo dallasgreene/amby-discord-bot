@@ -53,17 +53,13 @@ client.on("message", msg => {
     // if the message is from a bot, ignore it
     if (msg.author.bot) return;
 
-    if(msg.member.id === config.nate) {
-        if (Math.random() < 0.01) {
+    if(msg.member.id === config.nate && Math.random() < 0.01) {
             message.send(msg.channel, "idiot.");
-        }
         return;
     }
 
-    if(msg.member.id === config.josh) {
-        if (Math.random() < 0.01) {
+    if(msg.member.id === config.josh && Math.random() < 0.01) {
             message.send(msg.channel, "josh im ordering a pizza to your house what do you want?");
-        }
         return;
     }
 
