@@ -6,6 +6,7 @@ const add = require("./addCommand");
 const grind = require("./grindCommand");
 const stop = require("./stopCommand");
 const echo = require("./echoCommand");
+const get = require("./getCommand");
 
 module.exports = {
     hey: (msg, rest) => hey.go(msg.channel),
@@ -15,5 +16,6 @@ module.exports = {
     add: (msg, rest) => add.go(msg.channel, rest),
     grind: (msg, rest) => grind.go(msg.channel, rest),
     stop: (msg, rest) => stop.go(msg.channel, rest),
-    echo: (msg, rest) => echo.go(msg.channel, rest)
+    echo: (msg, rest) => echo.go(msg.channel, rest),
+    get: (msg, rest) => get.go(msg.channel.guild, rest)
 };
