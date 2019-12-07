@@ -30,7 +30,7 @@ const changeColor = (msg, rest, roleName) => {
 
 const findAndSetColor = (roleName, roles, color) => {
     for (let i = 0 ; i < roles.length ; i++) {
-        console.log(`comparing ${typeof roleName} to ${typeof roles[i].name}`)
+        console.log(`comparing ${typeof roleName} to ${typeof roles[i].name}`);
         if (roleName === roles[i].name) {
             roles[i].setColor(color);
             return true;
@@ -45,12 +45,11 @@ module.exports = {
 
         if (rest.includes("color")) {
             roleName = rest.splice(0, rest.indexOf("color")).join(" ");
-            roleName = roleName.join(" ");
             changeColor(msg, rest, roleName);
         }
 
         else if (rest.includes("name")) {
-            roleName = rest.splice(0, rest.indexOf("name"));
+            roleName = rest.splice(0, rest.indexOf("name")).join(" ");
             const newName = rest.slice(1, rest.length).join(" ");
             msg.member.colorRole.setName(newName);
             message.send(msg.channel, `Your role name has been set to ${newName}`);
