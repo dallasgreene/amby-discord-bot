@@ -5,7 +5,7 @@ module.exports = {
         if (rest.length === 2 && rest[0] === "color") {
             const color = rest[1];
             if (color.includes("#") && color.length === 7) {
-                msg.member.colorRole.setColor(rest[0]);
+                msg.member.colorRole.setColor(color);
                 message.send(msg.channel, "Your new role color has been set");
             }
         }
