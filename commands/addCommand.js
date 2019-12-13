@@ -29,5 +29,8 @@ module.exports = {
             updateList("fuckList", previous);
             message.send(channel, `Added ${name} to the fuck list.`);
         }
-    }
+    },
+    usage: prefix => `${prefix}add <person> to the <adam|fuck> list`,
+    snippet: "This command currently doesn't work. Someday it will",
+    help: ""
 };

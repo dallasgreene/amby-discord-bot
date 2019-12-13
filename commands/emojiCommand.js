@@ -6,5 +6,8 @@ module.exports = {
             const name = rest[0];
             msg.guild.createEmoji(msg.attachments.first().url, name);
         }
-    }
+    },
+    usage: prefix => `${prefix}emoji <emoji name> [image attachment]`,
+    snippet: "An emoji of the attached image is created with the given name",
+    help: ""
 };

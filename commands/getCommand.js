@@ -9,5 +9,8 @@ module.exports = {
         else if (rest[0] === "myRoles") {
 
         }
-    }
+    },
+    usage: prefix => `${prefix}get <info tag>`,
+    snippet: "This is mostly for dallas to get the snowflakes he needs",
+    help: ""
 };

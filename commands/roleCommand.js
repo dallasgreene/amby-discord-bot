@@ -54,5 +54,8 @@ module.exports = {
             msg.member.colorRole.setName(newName);
             message.send(msg.channel, `Your role name has been set to ${newName}`);
         }
-    }
+    },
+    usage: prefix => `${prefix}role <name(optional)> <color|name> <hex value|new name>`,
+    snippet: "Changes the color or name of one of your roles. But not Savion.",
+    help: ""
 };
