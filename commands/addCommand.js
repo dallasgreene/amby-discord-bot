@@ -1,7 +1,8 @@
 const message = require("../functions/message");
 
 module.exports = {
-    go: (channel, rest) => {
+    go: (msg, rest) => {
+        return;
         let idIndex = rest.indexOf("to") + 1;
 
         if (idIndex === 0) return;

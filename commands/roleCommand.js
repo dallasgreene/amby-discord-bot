@@ -1,7 +1,6 @@
 const message = require("../functions/message");
 
 const changeColor = (msg, rest, roleName) => {
-    console.log(`changing color for ${roleName}`);
     const color = rest[1];
     if (color.includes("#") && color.length === 7) {
         if (roleName) {
@@ -30,7 +29,6 @@ const changeColor = (msg, rest, roleName) => {
 
 const findAndSetColor = (roleName, roles, color) => {
     for (let i = 0 ; i < roles.length ; i++) {
-        console.log(`comparing ${typeof roleName} to ${typeof roles[i].name}`);
         if (roleName === roles[i].name) {
             roles[i].setColor(color);
             return true;
@@ -38,6 +36,8 @@ const findAndSetColor = (roleName, roles, color) => {
     }
     return false;
 };
+
+
 
 module.exports = {
     go: (msg, rest) => {
