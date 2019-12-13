@@ -17,11 +17,7 @@ const commandList = {
     echo
 };
 
-const help = {
-    go: (msg, rest) => {
-
-    }
-};
+const help = require('./helpCommand')(commandList);
 
 module.exports = {
     ...commandList,
