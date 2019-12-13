@@ -51,7 +51,7 @@ client.on("ready", () => {
 client.on("message", msg => {
 
     // if the message is from a bot, ignore it
-    if (msg.author.bot) return;
+    // if (msg.author.bot) return;
 
     if(msg.member.id === config.nate && Math.random() < 0.01) {
             message.send(msg.channel, "idiot.");
@@ -86,9 +86,8 @@ client.on("message", msg => {
         lastCommand = command;
         return;
     }
-    else {
-        lastCommand = "none";
-    }
+
+    lastCommand = "none";
 
     let commandResponse;
     if (command === "grind" && grindingId !== null) return;
@@ -99,9 +98,8 @@ client.on("message", msg => {
     }
 
     try {
-        commandResponse = commandList[command](msg, rest);
+        commandResponse = commandList[command].go(msg, rest);
     } catch(TypeError) {
-        lastCommand = "none";
         const response = `${message.spongeIt(msg.content.substring(config.prefix.length))} thats not even a thing dumb dumb`;
         message.send(msg.channel, response);
     }
