@@ -8,9 +8,9 @@ module.exports = commandList => {
             .setColor('#0099ff')
             .setTitle("Available Commands:");
 
-        for (let command in commandList) {
-            helpMsg.addField(`${prefix}${command}`, `snippet`);
-        }
+        Object.keys(commandList).forEach(cmd => {
+            helpMsg.addField(`${commandList[cmd].usage(prefix)}`, `${commandList[cmd].snippet}`);
+        });
 
         message.send(msg.channel, helpMsg);
     };
