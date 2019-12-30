@@ -1,16 +1,19 @@
-const message = require("../functions/message");
+const message = require('../functions/message');
+const Command = require('../models/Command');
 
-module.exports = {
-    go: (msg, rest) => {
-        if (rest[0] === "roleSnow") {
-            const roles = msg.channel.guild.roles;
-            const keys = roles.keyArray();
-        }
-        else if (rest[0] === "myRoles") {
 
-        }
-    },
-    usage: prefix => `${prefix}get <info tag>`,
-    snippet: "This is mostly for dallas to get the snowflakes he needs",
-    help: ""
+const go = (msg, rest) => {
+    if (rest[0] === "roleSnow") {
+        const roles = msg.channel.guild.roles;
+        const keys = roles.keyArray();
+    }
+    else if (rest[0] === "myRoles") {
+
+    }
 };
+const usage = "get <info tag>";
+const snippet = "This is mostly for dallas to get the snowflakes he needs";
+const helpText = "";
+
+
+module.exports = new Command(go, usage, snippet, helpText);

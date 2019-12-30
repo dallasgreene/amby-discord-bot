@@ -1,11 +1,13 @@
 const message = require("../functions/message");
+const Command = require('../models/Command');
 
-module.exports = {
-    go: msg => {
-        const channel = msg.channel;
-        return setInterval(() => message.send(channel, "!beg"), 10500);
-    },
-    usage: prefix => `${prefix}grind`,
-    snippet: "This was supposed to get us unlimited gambling funds, but NighLemur is a stupid bitch",
-    help: ""
+const go = msg => {
+    const channel = msg.channel;
+    return setInterval(() => message.send(channel, "!beg"), 10500);
 };
+
+const usage = "grind";
+const snippet = "This was supposed to get us unlimited gambling funds, but NighLemur is a stupid bitch";
+const helpText = "";
+
+module.exports = new Command(go, usage, snippet, helpText);

@@ -1,4 +1,5 @@
-const message = require("../functions/message");
+const message = require('../functions/message');
+const Command = require('../models/Command');
 
 const changeColor = (msg, rest, roleName) => {
     const color = rest[1];
@@ -37,25 +38,24 @@ const findAndSetColor = (roleName, roles, color) => {
     return false;
 };
 
+const go = (msg, rest) => {
+    let roleName = null;
 
+    if (rest.includes("color")) {
+        roleName = rest.splice(0, rest.indexOf("color")).join(" ");
+        changeColor(msg, rest, roleName);
+    }
 
-module.exports = {
-    go: (msg, rest) => {
-        let roleName = null;
-
-        if (rest.includes("color")) {
-            roleName = rest.splice(0, rest.indexOf("color")).join(" ");
-            changeColor(msg, rest, roleName);
-        }
-
-        else if (rest.includes("name")) {
-            roleName = rest.splice(0, rest.indexOf("name")).join(" ");
-            const newName = rest.slice(1, rest.length).join(" ");
-            msg.member.colorRole.setName(newName);
-            message.send(msg.channel, `Your role name has been set to ${newName}`);
-        }
-    },
-    usage: prefix => `${prefix}role <name(optional)> <color|name> <hex value|new name>`,
-    snippet: "Changes the color or name of one of your roles. But not Savion.",
-    help: ""
+    else if (rest.includes("name")) {
+        roleName = rest.splice(0, rest.indexOf("name")).join(" ");
+        const newName = rest.slice(1, rest.length).join(" ");
+        msg.member.colorRole.setName(newName);
+        message.send(msg.channel, `Your role name has been set to ${newName}`);
+    }
 };
+
+const usage = "role <name(optional)> <color|name> <hex value|new name>";
+const snippet = "Changes the color or name of one of your roles. But not Savion.";
+const helpText = "";
+
+module.exports = new Command(go, usage, snippet, helpText);
