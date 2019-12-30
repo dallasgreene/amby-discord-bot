@@ -7,7 +7,7 @@ const grind = require("./grindCommand");
 const echo = require("./echoCommand");
 // const get = require("./getCommand");
 
-const commandList = {
+let commandList = {
     hey,
     role,
     emoji,
@@ -17,9 +17,10 @@ const commandList = {
     echo
 };
 
-const help = require('./helpCommand')(commandList);
+const commands = require('./commandsCommand')(commandList);
+commandList.commands = commands;
 
-module.exports = {
-    ...commandList,
-    help
-};
+const help = require('./helpCommand')(commandList);
+commandList.help = help;
+
+module.exports = commandList;
