@@ -19,8 +19,6 @@ module.exports = commandList => {
             }
         }
 
-        helpMsg.addField(prefix + usage, snippet);
-
         message.send(msg.channel, helpMsg);
     };
 
