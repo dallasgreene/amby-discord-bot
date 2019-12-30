@@ -10,7 +10,7 @@ class Command {
         this.helpText = helpText;
     }
 
-    help = msg => {
+    help(msg) {
         let response = new RichEmbed()
             .setColor('#0099ff')
             .setTitle(prefix + this.usage)
@@ -19,3 +19,5 @@ class Command {
         message.send(msg.channel, response);
     }
 }
+
+module.exports = Command;
