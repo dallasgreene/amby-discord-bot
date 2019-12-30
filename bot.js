@@ -4,8 +4,8 @@ const configPath = "./config.json";
 const config = require(configPath);
 const fsProm = require("fs").promises;
 const token = require("./token_config.json");
-const message = require("./functions/message");
-const commandList = require("./commands/commandList");
+const message = require("./src/functions/message");
+const commandList = require("./src/commands/commandList");
 
 const updateList = (field, newList) => {
     let listString = "[";
