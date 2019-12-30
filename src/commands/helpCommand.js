@@ -1,6 +1,7 @@
 const { RichEmbed } = require('discord.js');
 const { prefix } = require('../../config');
 const message = require('../functions/message');
+const Command = require('../models/Command');
 
 module.exports = commandList => {
     const go = (msg, rest) => {
@@ -15,7 +16,10 @@ module.exports = commandList => {
         message.send(msg.channel, helpMsg);
     };
 
-    return {
-        go
-    };
+    return new Command(
+        go,
+        "help <command>",
+        "get details on how to use a command",
+        `Specify a command and Amby will tell you how to use it. `
+        + `If you just use ${prefix}help, Amby will give you a list of available commands.`);
 };
