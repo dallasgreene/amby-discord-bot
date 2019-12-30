@@ -2,6 +2,7 @@ const { RichEmbed } = require('discord.js');
 const { prefix } = require('../../config');
 const message = require('../functions/message');
 const Command = require('../models/Command');
+const commands = require('./commandsCommand');
 
 module.exports = commandList => {
     const usage = "help <command>";
@@ -10,19 +11,12 @@ module.exports = commandList => {
         + `If you just use ${prefix}help, Amby will give you a list of available commands.`;
 
     const go = (msg, rest) => {
-        let helpMsg = new RichEmbed()
-            .setColor('#0099ff')
-            .setTitle("Available Commands:");
-
-        for (let cmd in commandList) {
-            if (commandList.hasOwnProperty(cmd)) {
-                helpMsg.addField(commandList[cmd].usage(prefix), commandList[cmd].snippet);
-            }
+        const cmd = rest[0];
+        if (rest.length > 0 && commandList.hasOwnProperty(cmd)) {
+            commandList[cmd].help(msg);
+        } else {
+            commandList.commands.go(msg);
         }
-
-        helpMsg.addField(usage, snippet);
-
-        message.send(msg.channel, helpMsg);
     };
 
     return new Command(go, usage, snippet, helpText);
