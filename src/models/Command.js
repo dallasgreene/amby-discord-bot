@@ -13,8 +13,9 @@ class Command {
     help(msg) {
         let response = new RichEmbed()
             .setColor('#0099ff')
-            .setTitle(prefix + this.usage)
-            .addField("", this.helpText);
+            .setTitle(prefix + this.usage);
+        if (this.helpText) response.addField("details:", this.helpText);
+        else response.addField("details:", this.snippet);
 
         message.send(msg.channel, response);
     }
