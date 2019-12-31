@@ -22,5 +22,5 @@ module.exports = commandList => {
         message.send(msg.channel, helpMsg);
     };
 
-    return new Command(go, usage, snippet, helpText);
+    return new Command("commands", go, usage, snippet, helpText);
 };

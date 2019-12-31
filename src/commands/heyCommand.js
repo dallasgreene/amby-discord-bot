@@ -9,4 +9,4 @@ const usage = "hey";
 const snippet = "You say hey to Amby and you get a response";
 const helpText = "";
 
-module.exports = new Command(go, usage, snippet, helpText);
+module.exports = new Command("hey", go, usage, snippet, helpText);

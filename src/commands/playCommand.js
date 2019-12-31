@@ -16,4 +16,4 @@ const snippet = "Amby launches a twitch stream of the specified game";
 const helpText = "";
 
 
-module.exports = new Command(go, usage, snippet, helpText);
+module.exports = new Command("play", go, usage, snippet, helpText);

@@ -13,4 +13,4 @@ const snippet = "An emoji of the attached image is created with the given name";
 const helpText = "";
 
 
-module.exports = new Command(go, usage, snippet, helpText);
+module.exports = new Command("emoji", go, usage, snippet, helpText);

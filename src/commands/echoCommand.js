@@ -11,4 +11,4 @@ const snippet = "Amby repeats your message back to you, unless you're trying to 
 const helpText = "";
 
 
-module.exports = new Command(go, usage, snippet, helpText);
+module.exports = new Command("echo", go, usage, snippet, helpText);

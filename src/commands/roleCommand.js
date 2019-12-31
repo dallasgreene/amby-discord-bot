@@ -58,4 +58,4 @@ const usage = "role <name(optional)> <color|name> <hex value|new name>";
 const snippet = "Changes the color or name of one of your roles. But not Savion.";
 const helpText = "";
 
-module.exports = new Command(go, usage, snippet, helpText);
+module.exports = new Command("role", go, usage, snippet, helpText);

@@ -16,4 +16,4 @@ const snippet = "This is mostly for dallas to get the snowflakes he needs";
 const helpText = "";
 
 
-module.exports = new Command(go, usage, snippet, helpText);
+module.exports = new Command("get", go, usage, snippet, helpText);

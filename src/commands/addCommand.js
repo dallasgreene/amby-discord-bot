@@ -9,4 +9,4 @@ const usage = "add <person> to the <adam|fuck> list";
 const snippet = "This command currently doesn't work. Someday it will";
 const helpText = "";
 
-module.exports = new Command(go, usage, snippet, helpText);
+module.exports = new Command("add", go, usage, snippet, helpText);

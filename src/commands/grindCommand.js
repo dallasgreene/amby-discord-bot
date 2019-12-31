@@ -10,4 +10,4 @@ const usage = "grind";
 const snippet = "This was supposed to get us unlimited gambling funds, but NighLemur is a stupid bitch";
 const helpText = "";
 
-module.exports = new Command(go, usage, snippet, helpText);
+module.exports = new Command("grind", go, usage, snippet, helpText);

@@ -3,7 +3,8 @@ const { prefix } = require('../../config');
 const message = require('../functions/message');
 
 class Command {
-    constructor(go, usage, snippet, helpText) {
+    constructor(name, go, usage, snippet, helpText) {
+        this.name = name;
         this.go = go;
         this.usage = usage;
         this.snippet = snippet;

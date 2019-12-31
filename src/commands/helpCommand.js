@@ -19,5 +19,5 @@ module.exports = commandList => {
         }
     };
 
-    return new Command(go, usage, snippet, helpText);
+    return new Command("help", go, usage, snippet, helpText);
 };
