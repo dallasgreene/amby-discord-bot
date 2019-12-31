@@ -97,9 +97,13 @@ client.on("message", msg => {
         return;
     }
 
-    try {
-        commandResponse = commandList[command].go(msg, rest);
-    } catch(TypeError) {
+    if (commandList.hasOwnProperty(command)) {
+        try {
+            commandResponse = commandList[command].go(msg, rest);
+        } catch (TypeError) {
+            message.send(msg.channel, "There's been an error. Fix ur shit :b:allas");
+        }
+    } else {
         const response = `${message.spongeIt(msg.content.substring(config.prefix.length))} thats not even a thing dumb dumb`;
         message.send(msg.channel, response);
     }
