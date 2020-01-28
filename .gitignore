@@ -10,6 +10,6 @@
 *.zip
 
 node_modules
-token_config.json
+configuration/token_config.json
 amby-discord-bot.iml
 .idea
