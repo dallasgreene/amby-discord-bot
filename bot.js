@@ -1,42 +1,12 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const configPath = "./config.json";
-const config = require(configPath);
-const fsProm = require("fs").promises;
-const token = require("./token_config.json");
+const config = require("./configuration/config.json");
+const members = require("./configuration/memebers.json");
+const memberSnowflakes = require("./configuration/memberSnowflakes.json");
+const responses = require("./configuration/responses.json");
+const token = require("./configuration/token_config.json").token;
 const message = require("./src/functions/message");
 const commandList = require("./src/commands/commandList");
-
-const updateList = (field, newList) => {
-    let listString = "[";
-    for (let name of newList) {
-        listString += "\"" + name + "\", "
-    }
-    listString = listString.substring(0, listString.length - 2);
-    listString += "]";
-    fsProm.readFile(configPath, "utf8")
-    .then(output => {
-        const changeIndex = output.indexOf(field) + field.length + 3;
-        const afterIndex = ((output.indexOf(",", changeIndex) === -1)
-            ? output.length - 2 : output.indexOf(",", changeIndex));
-
-        const before = output.substring(0, changeIndex);
-        const after = output.substring(afterIndex);
-
-        const newConfig = before + listString + after;
-        console.log(`new config:\n${newConfig}`);
-        fsProm.writeFile(configPath, newConfig);
-    });
-};
-
-const toString = list => {
-    let listString = "";
-    for (let i = 0 ; i < list.length ; i ++) {
-        listString += (i + 1).toString() + ". " + list[i] + "\n";
-    }
-    listString = listString.trim();
-    return listString;
-};
 
 let lastCommand = "none";
 
@@ -51,15 +21,12 @@ client.on("ready", () => {
 client.on("message", msg => {
 
     // if the message is from a bot, ignore it
-    // if (msg.author.bot) return;
+    if (msg.author.bot) return;
 
-    if(msg.member.id === config.nate && Math.random() < 0.01) {
-            message.send(msg.channel, "idiot.");
-        return;
-    }
-
-    if(msg.member.id === config.josh && Math.random() < 0.01) {
-            message.send(msg.channel, "josh im ordering a pizza to your house what do you want?");
+    // if msg author is one of the boys, theres a 1% chance they get memed on
+    if (memberSnowflakes.hasOwnProperty(msg.member.id) && Math.random() < 0.01) {
+        const responseArray = responses[memberSnowflakes[msg.member.id]];
+        message.send(msg.channel, responseArray[Math.floor(Math.random() * responseArray.length)]);
         return;
     }
 
@@ -76,19 +43,21 @@ client.on("message", msg => {
     console.log(`Set rest: \"${rest}\", length: ${rest.length}`);
     console.log(`Set command: \"${command}\"`);
 
+    // theres a chance that Amby just doesn't do what you tell them to
     if (command === lastCommand) {
         message.send(msg.channel, "alright whatever");
     }
     else if (Math.random() < 0.05) {
-        const responsesList = config.genericResponses;
+        const responsesList = responses.generic;
         const response = responsesList[Math.floor(Math.random() * responsesList.length)];
         message.send(msg.channel, response);
         lastCommand = command;
         return;
     }
 
-    lastCommand = "none";
+    lastCommand = "none";  // reset last command
 
+    // extra stuff for the grind command, will eventually be removed
     let commandResponse;
     if (command === "grind" && grindingId !== null) return;
     if (command === "stop" && grindingId !== null) {
@@ -97,6 +66,7 @@ client.on("message", msg => {
         return;
     }
 
+    // check if command is recognized, and if so, call it
     if (commandList.hasOwnProperty(command)) {
         try {
             commandResponse = commandList[command].go(msg, rest);
@@ -108,18 +78,10 @@ client.on("message", msg => {
         message.send(msg.channel, response);
     }
 
+    // more extra stuff for the grind command
     if (command === "grind" && commandResponse) {
         grindingId = commandResponse;
     }
-    return;
-
-    if (command === "adam") {
-        message.send(msg.channel, toString(config.adamSandlerList));
-    }
-
-    else if (command === "fuck") {
-        message.send(msg.channel, toString(config.fuckList));
-    }
 });
 
-client.login(token.token);
+client.login(token);
