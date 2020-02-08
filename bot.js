@@ -23,8 +23,8 @@ client.on("message", msg => {
     // if the message is from a bot, ignore it
     if (msg.author.bot) return;
 
-    // if msg author is one of the boys, theres a 1% chance they get memed on
-    if (memberSnowflakes.hasOwnProperty(msg.member.id) && Math.random() < 0.01) {
+    // if msg author is one of the boys, theres a 0.5% chance they get memed on
+    if (memberSnowflakes.hasOwnProperty(msg.member.id) && Math.random() < 0.005) {
         const responseArray = responses[memberSnowflakes[msg.member.id]];
         message.send(msg.channel, responseArray[Math.floor(Math.random() * responseArray.length)]);
         return;
