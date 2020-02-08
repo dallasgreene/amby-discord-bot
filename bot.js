@@ -1,12 +1,10 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./configuration/config.json");
-const members = require("./configuration/memebers.json");
-const memberSnowflakes = require("./configuration/memberSnowflakes.json");
 const responses = require("./configuration/responses.json");
 const token = require("./configuration/token_config.json").token;
 const message = require("./src/functions/message");
-const commandList = require("./src/commands/commandList");
+const commandList = require("./src/controller/commands/commandList");
 
 let lastCommand = "none";
 
@@ -23,12 +21,8 @@ client.on("message", msg => {
     // if the message is from a bot, ignore it
     if (msg.author.bot) return;
 
-    // if msg author is one of the boys, theres a 0.5% chance they get memed on
-    if (memberSnowflakes.hasOwnProperty(msg.member.id) && Math.random() < 0.005) {
-        const responseArray = responses[memberSnowflakes[msg.member.id]];
-        message.send(msg.channel, responseArray[Math.floor(Math.random() * responseArray.length)]);
-        return;
-    }
+    const memedOn = require("./src/controller/memedOn")(msg);
+    if (memedOn) return;
 
     // ignore any message that does not start with prefix in the configuration file.
     if (msg.content.substring(0, config.prefix.length) !== config.prefix) return;

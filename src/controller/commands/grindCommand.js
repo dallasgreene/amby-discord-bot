@@ -1,5 +1,5 @@
-const message = require("../functions/message");
-const Command = require('../models/Command');
+const message = require("../../functions/message");
+const Command = require('../../models/Command');
 
 const go = msg => {
     const channel = msg.channel;
