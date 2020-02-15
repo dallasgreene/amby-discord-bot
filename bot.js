@@ -3,8 +3,8 @@ const client = new Discord.Client();
 const config = require("./configuration/config.json");
 const responses = require("./configuration/responses.json");
 const token = require("./configuration/token_config.json").token;
-const message = require("./src/functions/message");
-const commandList = require("./src/controller/commands/commandList");
+const message = require("./src/util/message");
+const commandList = require("./src/controllers/commands/commandList");
 
 let lastCommand = "none";
 
@@ -21,7 +21,7 @@ client.on("message", msg => {
     // if the message is from a bot, ignore it
     if (msg.author.bot) return;
 
-    const memedOn = require("./src/controller/memedOn")(msg);
+    const memedOn = require("./src/controllers/memedOn")(msg);
     if (memedOn) return;
 
     // ignore any message that does not start with prefix in the configuration file.
