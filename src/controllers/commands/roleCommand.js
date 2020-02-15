@@ -1,5 +1,5 @@
-const message = require('../functions/message');
-const Command = require('../models/Command');
+const message = require('../../util/message');
+const Command = require('../../definitions/Command');
 
 const changeColor = (msg, rest, roleName) => {
     const color = rest[1];

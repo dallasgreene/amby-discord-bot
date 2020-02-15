@@ -1,7 +1,7 @@
 const { RichEmbed } = require('discord.js');
-const { prefix } = require('../../configuration/config');
-const message = require('../functions/message');
-const Command = require('../models/Command');
+const { prefix } = require('../../../configuration/config');
+const message = require('../../util/message');
+const Command = require('../../definitions/Command');
 const commands = require('./commandsCommand');
 
 module.exports = commandList => {

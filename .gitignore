@@ -1,5 +1,4 @@
 # Packages
-
 *.7z
 *.dmg
 *.gz
@@ -9,7 +8,12 @@
 *.tar
 *.zip
 
-node_modules
-configuration/token_config.json
-amby-discord-bot.iml
+# Intellij stuff
 .idea
+*.iml
+
+# dependencies
+node_modules
+
+# for security reasons
+configuration/token_config.json
