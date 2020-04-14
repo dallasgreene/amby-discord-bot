@@ -1,4 +1,4 @@
-const message = require('../../util/message');
+const message = require('../../utils/message');
 const Command = require('../../definitions/Command');
 
 

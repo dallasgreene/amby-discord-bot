@@ -1,6 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const { prefix } = require('../../configuration/config');
-const message = require('../util/message');
+const message = require('../utils/message');
 
 class Command {
     constructor(name, go, usage, snippet, helpText) {

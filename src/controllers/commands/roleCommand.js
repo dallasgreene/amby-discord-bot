@@ -1,9 +1,10 @@
-const message = require('../../util/message');
+const message = require('../../utils/message');
+const validate = require('../../utils/validation');
 const Command = require('../../definitions/Command');
 
 const changeColor = (msg, rest, roleName) => {
     const color = rest[1];
-    if (color.includes("#") && color.length === 7) {
+    if (validate.isValidHexColor(color)) {
         if (roleName) {
             const yourRoles = msg.member.roles.array();
             if (!findAndSetColor(roleName, yourRoles, color)) {
@@ -39,15 +40,13 @@ const findAndSetColor = (roleName, roles, color) => {
 };
 
 const go = (msg, rest) => {
-    let roleName = null;
-
     if (rest.includes("color")) {
-        roleName = rest.splice(0, rest.indexOf("color")).join(" ");
+        const roleName = rest.splice(0, rest.indexOf("color")).join(" ").toLowerCase();
         changeColor(msg, rest, roleName);
     }
 
     else if (rest.includes("name")) {
-        roleName = rest.splice(0, rest.indexOf("name")).join(" ");
+        const roleName = rest.splice(0, rest.indexOf("name")).join(" ");
         const newName = rest.slice(1, rest.length).join(" ");
         msg.member.colorRole.setName(newName);
         message.send(msg.channel, `Your role name has been set to ${newName}`);

@@ -3,7 +3,7 @@ const client = new Discord.Client();
 const config = require("./configuration/config.json");
 const responses = require("./configuration/responses.json");
 const token = require("./configuration/token_config.json").token;
-const message = require("./src/util/message");
+const message = require("./src/utils/message");
 const commandList = require("./src/controllers/commands/commandList");
 
 let lastCommand = "none";
