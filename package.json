@@ -5,7 +5,7 @@
   "main": "bot.js",
   "author": "Dallas Greene",
   "dependencies": {
-    "discord.js": "^11.5.1",
+    "discord.js": "12.2.0",
     "mongoose": "^5.9.1"
   },
   "scripts": {
