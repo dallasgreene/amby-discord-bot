@@ -10,6 +10,10 @@ const DbService = require('./src/models/DbService');
 const ServerDao = require('./src/daos/server/ServerDao');
 const AmbyController = require('./src/controllers/AmbyController');
 
+/**
+ * Initialize the bot via dependency injection
+ * @return {Promise<AmbyController>}
+ */
 const init = async () => {
     const dbUser = process.argv[2];
     const dbPass = process.argv[3];
