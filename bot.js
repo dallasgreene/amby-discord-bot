@@ -1,81 +1,65 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const config = require("./configuration/config.json");
-const responses = require("./configuration/responses.json");
+
 const token = require("./configuration/token_config.json").token;
-const message = require("./src/utils/message");
-const commandList = require("./src/controllers/commands/commandList");
 
-let lastCommand = "none";
+const StartupService = require('./src/models/StartupService');
+const AmbyModel = require('./src/models/AmbyModel');
+const CommandService = require('./src/models/CommandService');
+const DbService = require('./src/models/DbService');
+const ServerDao = require('./src/daos/server/ServerDao');
+const AmbyController = require('./src/controllers/AmbyController');
 
-let grindingId = null;
+/**
+ * Initialize the bot via dependency injection
+ * @return {Promise<AmbyController>}
+ */
+const init = async () => {
+    const dbUser = process.argv[2];
+    const dbPass = process.argv[3];
+    const mongoose = require('mongoose');
+    // mongoose.set('useFindAndModify', false);
+    await mongoose.connect('mongodb://localhost:27017/', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        user: dbUser,
+        pass: dbPass,
+        authSource: 'amby-db',
+        dbName: 'amby-db'
+    });
+    const serverDao = new ServerDao(mongoose);
+    const dbService = new DbService(serverDao);
 
-// start bot
-client.on("ready", () => {
-    console.log(`Ya boi ${client.user.tag} is in this bitch.`);
-});
+    const startupService = new StartupService(dbService);
 
-// checks every message sent to the server
-client.on("message", msg => {
+    await startupService.initCollections();
 
-    // if the message is from a bot, ignore it
-    if (msg.author.bot) return;
+    const servers = await startupService.getServers();
+    const model = new AmbyModel(servers);
 
-    const memedOn = require("./src/controllers/memedOn")(msg);
-    if (memedOn) return;
+    const commandService = new CommandService(dbService, model);
 
-    // ignore any message that does not start with prefix in the configuration file.
-    if (msg.content.substring(0, config.prefix.length) !== config.prefix) return;
+    const something = await commandService.getServerById('default');
+    console.log(something)
+    const somethingElse = await commandService.getServerById('381401643268308992');
+    console.log(somethingElse)
 
-    // array of everything after the prefix defined in the config
-    const rest = msg.content.substring(config.prefix.length).trim().split(" ");
+    const commandList = require("./src/controllers/commands/commandList")(commandService);
 
-    // the command that was received by the bot, (also removes it from the array of everything after prefix)
-    const command = rest.shift().toLowerCase();
+    // start bot
+    client.on(`ready`, () => startupService.handleReadyEvent(client, model));
 
-    // debugging:
-    console.log(`Set rest: \"${rest}\", length: ${rest.length}`);
-    console.log(`Set command: \"${command}\"`);
+    return new AmbyController(commandList, model);
+};
 
-    // theres a chance that Amby just doesn't do what you tell them to
-    if (command === lastCommand) {
-        message.send(msg.channel, "alright whatever");
-    }
-    else if (Math.random() < 0.05) {
-        const responsesList = responses.generic;
-        const response = responsesList[Math.floor(Math.random() * responsesList.length)];
-        message.send(msg.channel, response);
-        lastCommand = command;
-        return;
-    }
+const main = async () => {
+    const controller = await init();
 
-    lastCommand = "none";  // reset last command
-
-    // extra stuff for the grind command, will eventually be removed
-    let commandResponse;
-    if (command === "grind" && grindingId !== null) return;
-    if (command === "stop" && grindingId !== null) {
-        clearInterval(grindingId);
-        grindingId = null;
-        return;
-    }
-
-    // check if command is recognized, and if so, call it
-    if (commandList.hasOwnProperty(command)) {
-        try {
-            commandResponse = commandList[command].go(msg, rest);
-        } catch (TypeError) {
-            message.send(msg.channel, "There's been an error. Fix ur shit :b:allas");
-        }
-    } else {
-        const response = `${message.spongeIt(msg.content.substring(config.prefix.length))} thats not even a thing dumb dumb`;
-        message.send(msg.channel, response);
-    }
-
-    // more extra stuff for the grind command
-    if (command === "grind" && commandResponse) {
-        grindingId = commandResponse;
-    }
-});
+    // checks every message sent to the server
+    client.on(`message`, msg => controller.handleMessageEvent(msg));
+};
 
 client.login(token);
+
+main();

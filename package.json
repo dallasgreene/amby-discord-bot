@@ -1,16 +1,16 @@
 {
-  "name": "Amby",
+  "name": "amby",
   "version": "1.0.0",
-  "description": "Does Shit (and cum)",
+  "description": "Does Stuff",
   "main": "bot.js",
   "author": "Dallas Greene",
+  "scripts": {
+    "start": "node bot.js"
+  },
   "dependencies": {
     "discord.js": "12.2.0",
     "mongoose": "^5.9.1"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [],
-  "license": "ISC"
+  "license": "MIT"
 }
