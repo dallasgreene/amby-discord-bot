@@ -12,7 +12,7 @@ To run Amby, you will need a [discord account](https://discord.com/developers/ap
 a Discord server you created/manage that you would like to add amby to, and both
 [node](https://nodejs.org/en/) and [docker desktop](https://www.docker.com/get-started).
 
-####Create an Application and Add It to Your Server
+#### Create an Application and Add It to Your Server
 1. Go to [discord's developer portal](https://discord.com/developers/applications) and create a
 new application for this bot (maybe call it "Amby")
 2. After you create the bot, click "Bot" in the settings menu on the left part of the screen and
@@ -29,14 +29,14 @@ and then copy the link that pops up and paste it into a new tab in your browser
 6. It'll give you a dropdown too add the bot to a server, chose a server and click "authorize"
 at the bottom.
 
-####Create the Database Amby Uses
+#### Create the Database Amby Uses
 1. Navigate to the `db/` directory of this project in the terminal
 2. Run `docker build . -t amby-mongo` to create the docker image for the database
 3. Run `sh create_docker_db.sh [username] [password]` to create the container for the db
     1. This will also start the database
     2. In the future, run `docker start amby-db` and `docker stop amby-db` to start and stop the db
 
-####Run the Bot
+#### Run the Bot
 1. Run `npm run start -- [username] [password]`
     1. This must be the same username and password that you provided in step 3 of creating
     the database
