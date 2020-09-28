@@ -1,4 +1,4 @@
-FROM mongo:4.2.6-bionic
+FROM mongo:4.2-bionic
 
 COPY ./startup /docker-entrypoint-initdb.d
 
