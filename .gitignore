@@ -17,3 +17,4 @@ node_modules
 
 # for security reasons
 configuration/token_config.json
+configuration/serverToken.json

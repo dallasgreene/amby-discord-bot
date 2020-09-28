@@ -1,32 +1,62 @@
-const { RichEmbed } = require('discord.js');
-const { prefix } = require('../../configuration/config');
+const { MessageEmbed } = require('discord.js');
 const message = require('../utils/message');
 
 class Command {
-    constructor(name, go, usage, snippet, helpText) {
+    /**
+     * @constructor
+     * @param {CommandService} service
+     * @param {String} name
+     * @param {String} usage
+     * @param {String} snippet
+     * @param {String} helpText
+     */
+    constructor(service, name, usage, snippet, helpText) {
+        this._service = service;
         this._name = name;
-        this._go = go;
         this._usage = usage;
         this._snippet = snippet;
         this._helpText = helpText;
     }
 
-    help(msg) {
-        let response = new RichEmbed()
-            .setColor('#0099ff')
-            .setTitle(prefix + this._usage);
+    /**
+     * Returns a MessageEmbed which explains how to use this command.
+     * @param {Message} msg
+     * @return {MessageEmbed} A response which explains how to use this command.
+     */
+    async help(msg) {
+        const guild = msg.guild;
+        const server = this._service.getServerById(guild.id);
+
+        let embedColor = ``;
+        if (server.ambyRoleId !== null) {
+            const ambyRole = await guild.roles.fetch(server.ambyRoleId, false);
+            embedColor = ambyRole.hexColor;
+        } else {
+            embedColor = `#ff1a1a`;
+        }
+
+        let response = new MessageEmbed()
+            .setColor(embedColor)
+            .setTitle(server.prefix + this._usage);
         if (this._helpText) response.addField("details:", this._helpText);
         else response.addField("details:", this._snippet);
 
-        message.send(msg.channel, response);
+        return response;
+    }
+
+    /**
+     * Executes this command given a message object and an array of arguments.
+     * @param {Message} msg
+     * @param {String[]} args
+     * @throws {Error} If this method has not been overriden by its subclass.
+     * @return {Promise<String>} The message that should be displayed to the user.
+     */
+    async go(msg, args) {
+        throw new Error(`Requested command did not override the go method.`);
     }
 
     get name() {
         return this._name;
-    }
-
-    get go() {
-        return this._go;
     }
 
     get usage() {
