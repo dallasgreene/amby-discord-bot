@@ -14,7 +14,7 @@ const getCommandList = (commandService) => {
   // initialize all of the commands defined in commandList.json
   availableCommands.forEach((Command) => {
     const command = new Command(commandService);
-    commandList[command.name] = command;
+    commandList[command.getName()] = command;
   });
 
   // add the "commands" command separately because it needs to be passed the command list
@@ -26,7 +26,7 @@ const getCommandList = (commandService) => {
     if (Object.prototype.hasOwnProperty.call(commandList, command)) {
       commandAliasMapping[command].forEach((Alias) => {
         const commandAlias = new Alias(commandService, commandList[command]);
-        commandList[commandAlias.name] = commandAlias;
+        commandList[commandAlias.getName()] = commandAlias;
       });
     } else {
       throw new Error(`Aliases were defined in commandAliasMapping for the ${command} command which was not initialized.`);

@@ -44,14 +44,20 @@ class Command {
   }
 
   /**
-     * Executes this command given a message object and an array of arguments.
-     * @param {Message} msg
-     * @param {String[]} args
-     * @throws {Error} If this method has not been overriden by its subclass.
-     * @return {Promise<String>} The message that should be displayed to the user.
-     */
+   * Executes this command given a message object and an array of arguments. This message object
+   * comes directly from discord.js: https://discord.js.org/#/docs/main/stable/class/Message .
+   * The arguments array is all the "words" which came after the triggering command: For example,
+   * `!role my-role color #FF0088` triggers the role command with args
+   * ['my-role', 'color', '#FF0088'].
+   * Whatever is returned from this method will be sent as a single message by the bot to the
+   * channel where the message that triggered this method was received.
+   * @param {Message} msg
+   * @param {String[]} args - All "words" which came after the triggering command.
+   * @throws {Error} If this method has not been overriden by its implementing subclass.
+   * @return {Promise<String|MessageEmbed>} The message that should be displayed to the user.
+   */
   async go(msg, args) {
-    throw new Error('Requested command did not override the go method.');
+    throw new Error('This command did not override the go method.');
   }
 
   getName() {

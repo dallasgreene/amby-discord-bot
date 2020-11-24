@@ -7,7 +7,7 @@ class RoleCommand extends Command {
    * @param {CommandService} commandService
    */
   constructor(commandService) {
-    super(commandService, 'role', 'role <name(optional)> <color|name> <hex value|new name>',
+    super(commandService, 'role', 'role <name(optional)> <"color"|"name"> <hex value|new name>',
       'Changes the color or name of one of your roles. But not Savion.',
       '');
   }

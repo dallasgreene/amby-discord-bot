@@ -6,12 +6,15 @@ class CommandAlias extends Command {
    * @param {CommandService} service
    * @param {Command} command - The command this is an alias for.
    * @param {String} name
-   * @param {String} usage
-   * @param {String} snippet
-   * @param {String} helpText
    */
-  constructor(service, command, name, usage, snippet, helpText) {
-    super(service, name, usage, snippet, helpText);
+  constructor(service, command, name) {
+    super(
+      service,
+      name,
+      `${name} ${command.getUsage().slice(command.getUsage().indexOf(' ') + 1)}`,
+      command.getSnippet(),
+      command.getHelpText(),
+    );
     this.command = command;
   }
 

@@ -13,6 +13,7 @@ a Discord server you created/manage that you would like to add amby to, and the 
 both [node](https://nodejs.org/en/) and [docker desktop](https://www.docker.com/get-started).
 
 #### Create an Application and Add It to Your Server
+*This is how the code here is connected to discord so users can interact with it*
 1. Go to [discord's developer portal](https://discord.com/developers/applications) and create a
     new application for this bot (maybe call it "Amby").
 2. After you create the bot, click "Bot" in the settings menu on the left part of the screen and
@@ -41,5 +42,29 @@ anywhere and will never appear in the source code of the bot. That's as secure a
 
 **Contributing**
 --
-Idk why anyone would want to work on this but at some point I'll write out this section with
-some macro on how the code is structured so you can figure out whats going on.
+If you would like to add something to Amby, message me (Dallas, dgreene1641@gmail.com) and I'll add
+you as a contributor. If you really want to you can also fork this and do whatever you want with it.
+ 
+#### To Add a New Command
+1. Create a file for it:
+    `src/controllers/commands/[appropriate category folder]/[name of command]Command.js`
+2. Implement your command as a class which extends `src/definitions/Command.js`.
+    1. Its constructor should take only one argument of type `src/models/CommandService.js`, and
+        this should be the first argument to the `super` call in the constructor. The rest of the
+        arguments to the super call are strings which you should write.
+    2. The `go` method should be overwritten. See its declaration in `src/definitions/Command.js`
+        for details on how to use it.
+    3. If your command needs to make a call to the model/database, use `this.commandService`.
+    4. Your class should be the default export of your file.
+3. Add your command to `src/controllers/commands/availableCommands.js`.
+    1. Import it at the top and then add it to the array.
+    
+#### To Add an Alias for an Existing Command
+*For example:* `help` *is an alias for* `commands`, *they are just two different names for the same
+command*
+1. Modify the `JSONMapping` in `src/controllers/commands/commandAliasMapping.js`.
+    Details are in comments of the file.
+    
+#### To Add a Collection to the Database
+(TODO)
+
