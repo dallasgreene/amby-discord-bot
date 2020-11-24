@@ -1,10 +1,14 @@
 **Amby Discord Bot**
 --
-This is a [Discord](https://discord.com/) bot for the Planescape server.
+This is a [Discord](https://discord.com/) bot for the Planescape server, written by Dallas Greene.
 
 Currently it doesn't do a whole lot, because basically every time I learn more about development
 I come back to this bot and I try to refactor things to be better. So what ends up happening is
 I spend tons of time refactoring and very little time implementing new features.
+
+Currently, **there are no unit tests for this bot** because I don't want to spend my free time writing
+unit tests and the most fun I ever have with this bot is when I implement a new feature and my
+friends abuse the bugs they find.
 
 **Setup**
 --
