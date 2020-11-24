@@ -1,5 +1,9 @@
 import createCommandAlias from '../../utils/createCommandAlias';
 
+/**
+ * Keys of this mapping are the names of existing commands which should have aliases, and their
+ * values are an array of alias names they should also go by.
+ */
 const JSONMapping = {
   commands: ['help'],
 };
