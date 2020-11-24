@@ -1,57 +1,65 @@
-const { MessageEmbed } = require('discord.js');
-const Command = require('../../../definitions/Command');
+import { MessageEmbed } from 'discord.js';
+import Command from '../../../definitions/Command';
 
 class CommandsCommand extends Command {
-    /**
-     * @constructor
-     * @param {CommandService} commandService
-     * @param {Map<Command>} commandList
-     */
-    constructor(commandService, commandList) {
-        super(commandService, `commands`, `commands <command(optional)>`,
-            `Get details on how to use commands`,
-            `Specify a command and Amby will tell you how to use it. If you don't specify a command, ` +
-            `Amby will give you a list of available commands.`);
+  /**
+   * @constructor
+   * @param {CommandService} commandService
+   * @param {Map<Command>} commandList
+   */
+  constructor(commandService, commandList) {
+    super(commandService, 'commands', 'commands <command(optional)>',
+      'Get details on how to use commands',
+      'Specify a command and Amby will tell you how to use it. If you don\'t specify a command, '
+      + 'Amby will give you a list of available commands.');
 
-        this._commandList = commandList;
+    this.commandList = commandList;
+  }
+
+  /**
+   * Executes the get command given a message object and an array of arguments.
+   * @param {Message} msg
+   * @param {String[]} args
+   * @return {Promise<String | MessageEmbed>} The message that should be displayed to the user.
+   */
+  async go(msg, args) {
+    const cmd = args[0];
+    if (args.length > 0) {
+      if (Object.prototype.hasOwnProperty.call(this.commandList, cmd)) {
+        return this.commandList[cmd].help(msg);
+      }
+      return `The ${cmd} command does not exist.`;
+    }
+    // eslint-disable-next-line prefer-destructuring
+    const guild = msg.guild;
+    const server = this._service.getServerById(guild.id);
+    const defaultServer = this._service.getServerById('default');
+
+    let embedColor = '';
+    if (server.getAmbyColorRoleId() !== null) {
+      const ambyRole = await guild.roles.fetch(server.getAmbyColorRoleId(), false);
+      embedColor = ambyRole.hexColor;
+    } else {
+      embedColor = '#ff1a1a';
     }
 
-    /**
-     * Executes the get command given a message object and an array of arguments.
-     * @param {Message} msg
-     * @param {String[]} args
-     * @return {Promise<String | MessageEmbed>} The message that should be displayed to the user.
-     */
-    async go(msg, args) {
-        const cmd = args[0];
-        if (args.length > 0) {
-            if (this._commandList.hasOwnProperty(cmd)) return this._commandList[cmd].help(msg);
-            else return `The ${cmd} command does not exist.`;
-        } else {
-            const guild = msg.guild;
-            const server = this._service.getServerById(guild.id);
+    const prefix = (server.getPrefix() !== null) ? server.getPrefix() : defaultServer.getPrefix();
 
-            let embedColor = ``;
-            if (server.ambyRoleId !== null) {
-                const ambyRole = await guild.roles.fetch(server.ambyRoleId, false);
-                embedColor = ambyRole.hexColor;
-            } else {
-                embedColor = `#ff1a1a`;
-            }
+    const helpMsg = new MessageEmbed()
+      .setColor(embedColor)
+      .setTitle('Available Commands:');
 
-            let helpMsg = new MessageEmbed()
-                .setColor(embedColor)
-                .setTitle(`Available Commands:`);
-
-            for (let cmd in this._commandList) {
-                if (this._commandList.hasOwnProperty(cmd)) {
-                    helpMsg.addField(server.prefix + this._commandList[cmd].usage, this._commandList[cmd].snippet);
-                }
-            }
-
-            return helpMsg;
-        }
+    for (const cmd in this.commandList) {
+      if (Object.prototype.hasOwnProperty.call(this.commandList, cmd)) {
+        helpMsg.addField(
+          `${prefix}${this.commandList[cmd].usage}`,
+          this.commandList[cmd].snippet,
+        );
+      }
     }
+
+    return helpMsg;
+  }
 }
 
-module.exports = CommandsCommand;
+export default CommandsCommand;

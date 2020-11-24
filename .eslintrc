@@ -1,0 +1,8 @@
+{
+  "extends": "airbnb-base",
+  "ignorePatterns": ["*.spec.js", "dist/*", "node_modules/*", ".idea/*"],
+  "rules": {
+    "prefer-destructuring": "warn",
+    "class-methods-use-this":"off"
+  }
+}

@@ -2,45 +2,45 @@
  * Represents a Discord Server (aka Guild)
  */
 class Server {
-    /**
-     * @constructor
-     * @param {String} snowflake
-     * @param {String} prefix
-     * @param {String} ambyColorRoleId
-     * @param {String} ambyHighestRoleId
-     * @param {String[]} ambyRoleIds
-     */
-    constructor(snowflake, prefix, ambyColorRoleId, ambyHighestRoleId, ambyRoleIds) {
-        this._snowflake = snowflake;
-        this._prefix = prefix;
-        this._ambyColorRoleId = ambyColorRoleId;
-        this._ambyHighestRoleId = ambyHighestRoleId;
-        this._ambyRoleIds = ambyRoleIds;
-    }
+  /**
+   * @constructor
+   * @param {String} snowflake
+   * @param {String} prefix
+   * @param {String} ambyColorRoleId
+   * @param {String} ambyHighestRoleId
+   * @param {String[]} ambyRoleIds
+   */
+  constructor(snowflake, prefix, ambyColorRoleId, ambyHighestRoleId, ambyRoleIds) {
+    this.snowflake = snowflake;
+    this.prefix = prefix;
+    this.ambyColorRoleId = ambyColorRoleId;
+    this.ambyHighestRoleId = ambyHighestRoleId;
+    this.ambyRoleIds = ambyRoleIds;
+  }
 
-    get id() {
-        return this.snowflake;
-    }
+  getId() {
+    return this.snowflake;
+  }
 
-    get snowflake() {
-        return this._snowflake;
-    }
+  getSnowflake() {
+    return this.snowflake;
+  }
 
-    get prefix() {
-        return this._prefix;
-    }
+  getPrefix() {
+    return this.prefix;
+  }
 
-    get ambyColorRoleId() {
-        return this._ambyColorRoleId;
-    }
+  getAmbyColorRoleId() {
+    return this.ambyColorRoleId;
+  }
 
-    get ambyHighestRoleId() {
-        return this._ambyHighestRoleId;
-    }
+  getAmbyHighestRoleId() {
+    return this.ambyHighestRoleId;
+  }
 
-    get ambyRoleIds() {
-        return this._ambyRoleIds;
-    }
+  getAmbyRoleIds() {
+    return this.ambyRoleIds;
+  }
 }
 
-module.exports = Server;
+export default Server;
