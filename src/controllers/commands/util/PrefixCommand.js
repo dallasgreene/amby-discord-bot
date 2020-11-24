@@ -20,12 +20,12 @@ class PrefixCommand extends Command {
   async go(msg, args) {
     if (args.length === 0) {
       const newPrefix = this.getRandomPrefix();
-      await this._service.updateServer(msg.guild.id, { prefix: newPrefix });
+      await this.service.updateServer(msg.guild.id, { prefix: newPrefix });
       return 'You didn\'t provide a prefix so I made one up. Good luck figuring it out idiot';
     } if (args.length > 1) {
       return 'You can\'t use spaces in your prefix';
     }
-    await this._service.updateServer(msg.guild.id, { prefix: args[0] });
+    await this.service.updateServer(msg.guild.id, { prefix: args[0] });
     return `Prefix changed to ${args[0]}`;
   }
 

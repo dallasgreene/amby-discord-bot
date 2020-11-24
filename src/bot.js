@@ -18,7 +18,6 @@ const client = new Discord.Client();
  */
 const init = async () => {
   const [, , dbUser, dbPass] = process.argv;
-  console.log(dbUser, dbPass);
   // mongoose.set('useFindAndModify', false);
   await mongoose.connect('mongodb://localhost:27017/', {
     useNewUrlParser: true,
@@ -49,7 +48,11 @@ const init = async () => {
   const commandList = getCommandList(commandService);
 
   // start bot
-  client.on('ready', () => startupService.handleReadyEvent(client, model));
+  client.on('ready', () => (
+    startupService.handleReadyEvent(client, model).then(() => (
+      console.log(`Ya boi ${client.user.tag} is ready to go.`)
+    ))
+  ));
 
   return new AmbyController(commandList, model);
 };

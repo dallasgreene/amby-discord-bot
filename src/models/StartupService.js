@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import Server from '../definitions/data-models/Server';
 import collectionDefaults from '../../configuration/collectionDefaults.json';
 
@@ -7,7 +8,7 @@ class StartupService {
    * @param {DbService} dbService
    */
   constructor(dbService) {
-    this._dbService = dbService;
+    this.dbService = dbService;
   }
 
   /**
@@ -19,11 +20,11 @@ class StartupService {
   async handleReadyEvent(client, model) {
     const guildManager = client.guilds;
     const ambyUserId = client.user.id;
-    const guildIds = guildManager.cache.keys();
+    const guildIds = [...guildManager.cache.keys()];
 
-    for (const guildId of guildIds) {
+    guildIds.forEach((guildId) => {
       const guild = guildManager.cache.get(guildId);
-      if (!guild.available) continue;
+      if (!guild.available) return;
 
       const ambyRoleManager = guild.member(ambyUserId).roles;
       const server = {
@@ -33,17 +34,20 @@ class StartupService {
         ambyRoleIds: [...ambyRoleManager.cache.keys()],
       };
 
-      let serverDoc = {};
-      if (await this._dbService.server.exists(server._id)) {
-        serverDoc = await this._dbService.server.update(server._id, server);
-      } else {
-        server.prefix = null;
-        serverDoc = await this._dbService.server.create(server);
-      }
-      model.addOrUpdateServer(new Server(serverDoc._id, serverDoc.prefix, serverDoc.ambyColorRoleId,
-        serverDoc.ambyHighestRoleId, serverDoc.ambyRoleIds));
-    }
-    console.log(`Ya boi ${client.user.tag} is in this bitch.`);
+      this.dbService.server.exists(server._id)
+        .then((serverExists) => {
+          const addServerToModel = (serverDoc) => (
+            model.addOrUpdateServer(new Server(serverDoc._id, serverDoc.prefix,
+              serverDoc.ambyColorRoleId, serverDoc.ambyHighestRoleId, serverDoc.ambyRoleIds))
+          );
+          if (serverExists) {
+            this.dbService.server.update(server._id, server).then(addServerToModel);
+          } else {
+            server.prefix = null;
+            this.dbService.server.create(server).then(addServerToModel);
+          }
+        });
+    });
   }
 
   /**
@@ -51,30 +55,33 @@ class StartupService {
    * @return {Promise<void>}
    */
   async initCollections() {
-    for (const collection in collectionDefaults) {
-      try {
-        await this._dbService[collection].create(collectionDefaults[collection]);
-      } catch (err) {
-        console.log(`WARN: Unable to create default for collection "${collection}", err: ${err.message}\n`
-          + 'If this was a duplicate _id error, the collection has already been initialized and this '
-          + 'message can be ignored.');
-      }
-    }
+    return new Promise((resolve) => {
+      let currCollection = Promise.resolve();
+      Object.keys(collectionDefaults).forEach((collection) => {
+        currCollection = currCollection.then(() => (
+          this.dbService[collection].create(collectionDefaults[collection])
+            .catch((err) => {
+              console.log(`WARN: Unable to create default for collection "${collection}", err: ${err.message}\nIf this was a duplicate _id error, the collection has already been initialized and this message can be ignored.`);
+            })
+        ));
+      });
+      currCollection.then(() => resolve());
+    });
   }
 
   /**
    * Fetches all the servers in the database and returns a map of servers whose keys are their
    * respective snowflakes.
-   * @returns {Promise<Map<String, Server>>}
+   * @returns {Promise<Object.<String, Server>>}
    */
   async getServers() {
-    const servers = await this._dbService.server.findAll();
+    const servers = await this.dbService.server.findAll();
 
     const serverMapping = {};
-    for (const server of servers) {
+    servers.forEach((server) => {
       serverMapping[server._id] = new Server(server._id, server.prefix, server.ambyColorRoleId,
         server.ambyHighestRoleId, server.ambyRoleIds);
-    }
+    });
 
     return serverMapping;
   }

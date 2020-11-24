@@ -10,11 +10,11 @@ class Command {
      * @param {String} helpText
      */
   constructor(service, name, usage, snippet, helpText) {
-    this._service = service;
-    this._name = name;
-    this._usage = usage;
-    this._snippet = snippet;
-    this._helpText = helpText;
+    this.service = service;
+    this.name = name;
+    this.usage = usage;
+    this.snippet = snippet;
+    this.helpText = helpText;
   }
 
   /**
@@ -23,9 +23,8 @@ class Command {
      * @return {MessageEmbed} A response which explains how to use this command.
      */
   async help(msg) {
-    // eslint-disable-next-line prefer-destructuring
-    const guild = msg.guild;
-    const server = this._service.getServerById(guild.id);
+    const { guild } = msg;
+    const server = this.service.getServerById(guild.id);
 
     let embedColor = '';
     if (server.ambyRoleId !== null) {
@@ -37,9 +36,9 @@ class Command {
 
     const response = new MessageEmbed()
       .setColor(embedColor)
-      .setTitle(server.prefix + this._usage);
-    if (this._helpText) response.addField('details:', this._helpText);
-    else response.addField('details:', this._snippet);
+      .setTitle(server.prefix + this.usage);
+    if (this.helpText) response.addField('details:', this.helpText);
+    else response.addField('details:', this.snippet);
 
     return response;
   }
@@ -55,20 +54,20 @@ class Command {
     throw new Error('Requested command did not override the go method.');
   }
 
-  get name() {
-    return this._name;
+  getName() {
+    return this.name;
   }
 
-  get usage() {
-    return this._usage;
+  getUsage() {
+    return this.usage;
   }
 
-  get snippet() {
-    return this._snippet;
+  getSnippet() {
+    return this.snippet;
   }
 
-  get helpText() {
-    return this._helpText;
+  getHelpText() {
+    return this.helpText;
   }
 }
 

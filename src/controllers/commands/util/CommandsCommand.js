@@ -23,17 +23,16 @@ class CommandsCommand extends Command {
    * @return {Promise<String | MessageEmbed>} The message that should be displayed to the user.
    */
   async go(msg, args) {
-    const cmd = args[0];
+    const commandName = args[0];
     if (args.length > 0) {
-      if (Object.prototype.hasOwnProperty.call(this.commandList, cmd)) {
-        return this.commandList[cmd].help(msg);
+      if (Object.prototype.hasOwnProperty.call(this.commandList, commandName)) {
+        return this.commandList[commandName].help(msg);
       }
-      return `The ${cmd} command does not exist.`;
+      return `The ${commandName} command does not exist.`;
     }
-    // eslint-disable-next-line prefer-destructuring
-    const guild = msg.guild;
-    const server = this._service.getServerById(guild.id);
-    const defaultServer = this._service.getServerById('default');
+    const { guild } = msg;
+    const server = this.service.getServerById(guild.id);
+    const defaultServer = this.service.getServerById('default');
 
     let embedColor = '';
     if (server.getAmbyColorRoleId() !== null) {
@@ -49,14 +48,14 @@ class CommandsCommand extends Command {
       .setColor(embedColor)
       .setTitle('Available Commands:');
 
-    for (const cmd in this.commandList) {
-      if (Object.prototype.hasOwnProperty.call(this.commandList, cmd)) {
+    Object.keys(this.commandList).forEach((command) => {
+      if (Object.prototype.hasOwnProperty.call(this.commandList, command)) {
         helpMsg.addField(
-          `${prefix}${this.commandList[cmd].usage}`,
-          this.commandList[cmd].snippet,
+          `${prefix}${this.commandList[command].usage}`,
+          this.commandList[command].snippet,
         );
       }
-    }
+    });
 
     return helpMsg;
   }

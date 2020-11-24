@@ -4,14 +4,7 @@ class DbService {
    * @param {ServerDao} serverDao
    */
   constructor(serverDao) {
-    this._server = serverDao;
-  }
-
-  /**
-   * @return {ServerDao}
-   */
-  get server() {
-    return this._server;
+    this.server = serverDao;
   }
 }
 

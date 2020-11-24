@@ -1,9 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 import Server from '../definitions/data-models/Server';
 
 class CommandService {
   constructor(dbService, model) {
-    this._dbService = dbService;
-    this._model = model;
+    this.dbService = dbService;
+    this.model = model;
   }
 
   /**
@@ -12,7 +13,7 @@ class CommandService {
      * @returns {Server}
      */
   getServerById(id) {
-    return this._model.getServerById(id);
+    return this.model.getServerById(id);
   }
 
   /**
@@ -21,9 +22,9 @@ class CommandService {
      * @return {Promise<void>}
      */
   async saveServer(server) {
-    const serverDoc = await this._dbService.server.create(server);
-    this._model.addOrUpdateServer(new Server(serverDoc._id, serverDoc.prefix, serverDoc.ambyColorRoleId,
-      serverDoc.ambyColorRoleId, serverDoc.ambyRoleIds));
+    const serverDoc = await this.dbService.server.create(server);
+    this.model.addOrUpdateServer(new Server(serverDoc._id, serverDoc.prefix,
+      serverDoc.ambyColorRoleId, serverDoc.ambyColorRoleId, serverDoc.ambyRoleIds));
   }
 
   /**
@@ -33,10 +34,10 @@ class CommandService {
      * @return {Promise<void>}
      */
   async updateServer(serverId, server) {
-    const serverDoc = await this._dbService.server.update(serverId, server);
-    this._model.addOrUpdateServer(new Server(serverDoc._id, serverDoc.prefix, serverDoc.ambyColorRoleId,
-      serverDoc.ambyColorRoleId, serverDoc.ambyRoleIds));
-    // console.log(this._model._servers)
+    const serverDoc = await this.dbService.server.update(serverId, server);
+    this.model.addOrUpdateServer(new Server(serverDoc._id, serverDoc.prefix,
+      serverDoc.ambyColorRoleId, serverDoc.ambyColorRoleId, serverDoc.ambyRoleIds));
+    // console.log(this.model._servers)
   }
 }
 
