@@ -1,4 +1,4 @@
-import createCommandAlias from '../../utils/createCommandAlias';
+import CommandAlias from '../../definitions/CommandAlias';
 
 /**
  * Keys of this mapping are the names of existing commands which should have aliases, and their
@@ -16,7 +16,7 @@ const commandAliasMapping = {};
 
 Object.keys(JSONMapping).forEach((command) => {
   commandAliasMapping[command] = JSONMapping[command].map((aliasName) => (
-    createCommandAlias(aliasName)
+    (model, commandsCommand) => new CommandAlias(model, commandsCommand, aliasName)
   ));
 });
 

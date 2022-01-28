@@ -28,8 +28,9 @@ class AmbyController {
       message.send(msg.channel, 'Guild was unavailable, Dallas check this shit out this is weird.');
       return;
     }
-    const server = this.model.getServerById(guild.id);
-    const prefix = (server.prefix) ? server.prefix : this.model.getServerById('default').prefix;
+    const server = await this.model.getServerById(guild.id);
+    console.log('got server', server);
+    const prefix = server.getPrefix();
 
     // if msg author is one of the boys, theres a 0.5% chance they get memed on
     if (Object.prototype.hasOwnProperty.call(memberSnowflakes, msg.member.id)

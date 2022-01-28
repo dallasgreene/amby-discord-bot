@@ -4,11 +4,11 @@ import Command from '../../../definitions/Command';
 class CommandsCommand extends Command {
   /**
    * @constructor
-   * @param {CommandService} commandService
-   * @param {Map<Command>} commandList
+   * @param {AmbyModel} model
+   * @param {Object} commandList the mapping of command names to their corresponding command object.
    */
-  constructor(commandService, commandList) {
-    super(commandService, 'commands', 'commands <command(optional)>',
+  constructor(model, commandList) {
+    super(model, 'commands', 'commands <command(optional)>',
       'Get details on how to use commands',
       'Specify a command and Amby will tell you how to use it. If you don\'t specify a command, '
       + 'Amby will give you a list of available commands.');
@@ -31,8 +31,7 @@ class CommandsCommand extends Command {
       return `The ${commandName} command does not exist.`;
     }
     const { guild } = msg;
-    const server = this.service.getServerById(guild.id);
-    const defaultServer = this.service.getServerById('default');
+    const server = await this.model.getServerById(guild.id);
 
     let embedColor = '';
     if (server.getAmbyColorRoleId() !== null) {
@@ -42,8 +41,6 @@ class CommandsCommand extends Command {
       embedColor = '#ff1a1a';
     }
 
-    const prefix = (server.getPrefix() !== null) ? server.getPrefix() : defaultServer.getPrefix();
-
     const helpMsg = new MessageEmbed()
       .setColor(embedColor)
       .setTitle('Available Commands:');
@@ -51,7 +48,7 @@ class CommandsCommand extends Command {
     Object.keys(this.commandList).forEach((command) => {
       if (Object.prototype.hasOwnProperty.call(this.commandList, command)) {
         helpMsg.addField(
-          `${prefix}${this.commandList[command].usage}`,
+          `${server.getPrefix()}${this.commandList[command].usage}`,
           this.commandList[command].snippet,
         );
       }

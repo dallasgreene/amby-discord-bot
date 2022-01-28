@@ -4,10 +4,10 @@ import Command from '../../../definitions/Command';
 class RoleCommand extends Command {
   /**
    * @constructor
-   * @param {CommandService} commandService
+   * @param {AmbyModel} model
    */
-  constructor(commandService) {
-    super(commandService, 'role', 'role <name(optional)> <"color"|"name"> <hex value|new name>',
+  constructor(model) {
+    super(model, 'role', 'role <name(optional)> <"color"|"name"> <hex value|new name>',
       'Changes the color or name of one of your roles. But not Savion.',
       '');
   }
@@ -30,6 +30,22 @@ class RoleCommand extends Command {
       await msg.member.roles.color.setName(newName);
       return `Your role name has been set to ${newName}`;
     }
+    return 'You must specify whether you want to change your role color or your role name.';
+  }
+
+  /**
+   * Finds the role with the given name in the array of roles given.
+   * @param roleName
+   * @param roles
+   * @return {*}
+   */
+  findRole(roleName, roles) {
+    for (let i = 0; i < roles.length; i += 1) {
+      if (roleName === roles[i].name) {
+        return roles[i];
+      }
+    }
+    return undefined;
   }
 
   /**
@@ -58,7 +74,7 @@ class RoleCommand extends Command {
         await highestRole.setColor(color);
         return `role ${highestRole.name}'s color has been set`;
       }
-      return 'you don\'t even have a role fucko';
+      return 'you don\'t even have a role idiot';
     }
     return 'The color you gave was not a valid hex code.';
   }
@@ -71,11 +87,15 @@ class RoleCommand extends Command {
    * @return {Promise<boolean>}
    */
   async findAndSetColor(roleName, roles, color) {
-    for (let i = 0; i < roles.length; i++) {
+    let roleToChange;
+    for (let i = 0; i < roles.length; i += 1) {
       if (roleName === roles[i].name) {
-        await roles[i].setColor(color);
-        return true;
+        roleToChange = roles[i];
       }
+    }
+    if (roleToChange !== undefined) {
+      await roleToChange.setColor(color);
+      return true;
     }
     return false;
   }

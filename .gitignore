@@ -16,7 +16,7 @@
 node_modules
 
 # for security reasons
-configuration/token_config
+configuration/token_config*
 configuration/serverToken.json
 
 # ignore compiled code

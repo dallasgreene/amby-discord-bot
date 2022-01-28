@@ -3,10 +3,10 @@ import Command from '../../../definitions/Command';
 class AddCommand extends Command {
   /**
    * @constructor
-   * @param {CommandService} commandService
+   * @param {AmbyModel} model
    */
-  constructor(commandService) {
-    super(commandService, 'add', 'add <person> to the <adam|fuck> list',
+  constructor(model) {
+    super(model, 'add', 'add <person> to the <adam> list',
       'This command currently doesn\'t work. Someday it will',
       '');
   }

@@ -1,15 +1,12 @@
 import Discord from 'discord.js';
 import fs from 'fs';
 import mongoose from 'mongoose';
-import StartupService from './models/StartupService';
-import AmbyModel from './models/AmbyModel';
-import CommandService from './models/CommandService';
-import DbService from './models/DbService';
-import ServerDao from './daos/server/ServerDao';
+import StartupService from './utils/StartupService';
+import AmbyModel from './models/base/AmbyModel';
 import AmbyController from './controllers/AmbyController';
 import getCommandList from './controllers/commands/getCommandList';
 
-const token = fs.readFileSync('./configuration/token_config').toString('utf8');
+const token = fs.readFileSync('./configuration/token_config_alpha').toString('utf8').trim();
 const client = new Discord.Client();
 
 /**
@@ -20,36 +17,21 @@ const init = async () => {
   const [, , dbUser, dbPass] = process.argv;
   // mongoose.set('useFindAndModify', false);
   await mongoose.connect('mongodb://localhost:27017/', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    user: dbUser,
-    pass: dbPass,
-    authSource: 'amby-db',
+    auth: {
+      username: dbUser,
+      password: dbPass,
+    },
+    authSource: 'admin',
     dbName: 'amby-db',
   });
-  const serverDao = new ServerDao(mongoose);
-  const dbService = new DbService(serverDao);
+  const model = new AmbyModel(mongoose);
+  const startupService = new StartupService(model);
 
-  const startupService = new StartupService(dbService);
-
-  await startupService.initCollections();
-
-  const servers = await startupService.getServers();
-  const model = new AmbyModel(servers);
-
-  const commandService = new CommandService(dbService, model);
-
-  const something = await commandService.getServerById('default');
-  console.log(something);
-  const somethingElse = await commandService.getServerById('381401643268308992');
-  console.log(somethingElse);
-
-  const commandList = getCommandList(commandService);
+  const commandList = getCommandList(model);
 
   // start bot
   client.on('ready', () => (
-    startupService.handleReadyEvent(client, model).then(() => (
+    startupService.handleReadyEvent(client).then(() => (
       console.log(`Ya boi ${client.user.tag} is ready to go.`)
     ))
   ));

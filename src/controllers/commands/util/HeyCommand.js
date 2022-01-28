@@ -3,10 +3,10 @@ import Command from '../../../definitions/Command';
 class HeyCommand extends Command {
   /**
    * @constructor
-   * @param {CommandService} commandService
+   * @param {AmbyModel} model
    */
-  constructor(commandService) {
-    super(commandService, 'hey', 'hey',
+  constructor(model) {
+    super(model, 'hey', 'hey',
       'You say hey to Amby and you get a response.',
       '');
   }

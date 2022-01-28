@@ -3,10 +3,10 @@ import Command from '../../../definitions/Command';
 class EmojiCommand extends Command {
   /**
    * @constructor
-   * @param {CommandService} commandService
+   * @param {AmbyModel} model
    */
-  constructor(commandService) {
-    super(commandService, 'emoji', 'emoji <emoji name> [image attachment]',
+  constructor(model) {
+    super(model, 'emoji', 'emoji <emoji name> [image attachment]',
       'Amby launches a twitch stream of the specified game',
       '');
   }

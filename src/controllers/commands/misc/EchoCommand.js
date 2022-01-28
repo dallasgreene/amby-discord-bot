@@ -3,10 +3,10 @@ import Command from '../../../definitions/Command';
 class EchoCommand extends Command {
   /**
    * @constructor
-   * @param {CommandService} commandService
+   * @param {AmbyModel} model
    */
-  constructor(commandService) {
-    super(commandService, 'echo', 'echo <message>',
+  constructor(model) {
+    super(model, 'echo', 'echo <message>',
       'Amby repeats your message back to you, unless you\'re trying to @everyone, in which case cut that shit out',
       '');
   }

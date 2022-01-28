@@ -3,13 +3,13 @@ import Command from './Command';
 class CommandAlias extends Command {
   /**
    * @constructor
-   * @param {CommandService} service
+   * @param {AmbyModel} model
    * @param {Command} command - The command this is an alias for.
    * @param {String} name
    */
-  constructor(service, command, name) {
+  constructor(model, command, name) {
     super(
-      service,
+      model,
       name,
       `${name} ${command.getUsage().slice(command.getUsage().indexOf(' ') + 1)}`,
       command.getSnippet(),

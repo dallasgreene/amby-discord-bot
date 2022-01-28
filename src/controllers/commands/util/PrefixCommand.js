@@ -3,10 +3,10 @@ import Command from '../../../definitions/Command';
 class PrefixCommand extends Command {
   /**
    * @constructor
-   * @param {CommandService} commandService
+   * @param {AmbyModel} model
    */
-  constructor(commandService) {
-    super(commandService, 'prefix', 'prefix <new prefix>',
+  constructor(model) {
+    super(model, 'prefix', 'prefix <new prefix>',
       'Changes the prefix amby uses to recognize commands',
       'Changes the prefix amby uses to recognize commands, should accept pretty much anything except spaces');
   }
@@ -18,14 +18,16 @@ class PrefixCommand extends Command {
    * @return {Promise<String>} The message that should be displayed to the user.
    */
   async go(msg, args) {
-    if (args.length === 0) {
-      const newPrefix = this.getRandomPrefix();
-      await this.service.updateServer(msg.guild.id, { prefix: newPrefix });
-      return 'You didn\'t provide a prefix so I made one up. Good luck figuring it out idiot';
-    } if (args.length > 1) {
+    if (args.length > 1) {
       return 'You can\'t use spaces in your prefix';
     }
-    await this.service.updateServer(msg.guild.id, { prefix: args[0] });
+    const server = await this.model.getServerById(msg.guild.id);
+    if (args.length === 0) {
+      const newPrefix = this.getRandomPrefix();
+      await server.setPrefix(newPrefix);
+      return 'You didn\'t provide a prefix so I made one up. Good luck figuring it out idiot';
+    }
+    await server.setPrefix(args[0]);
     return `Prefix changed to ${args[0]}`;
   }
 

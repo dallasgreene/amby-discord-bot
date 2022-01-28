@@ -3,14 +3,14 @@ import { MessageEmbed } from 'discord.js';
 class Command {
   /**
      * @constructor
-     * @param {CommandService} service
+     * @param {AmbyModel} model
      * @param {String} name
      * @param {String} usage
      * @param {String} snippet
      * @param {String} helpText
      */
-  constructor(service, name, usage, snippet, helpText) {
-    this.service = service;
+  constructor(model, name, usage, snippet, helpText) {
+    this.model = model;
     this.name = name;
     this.usage = usage;
     this.snippet = snippet;
@@ -24,11 +24,11 @@ class Command {
      */
   async help(msg) {
     const { guild } = msg;
-    const server = this.service.getServerById(guild.id);
+    const server = await this.model.getServerById(guild.id);
 
     let embedColor = '';
-    if (server.ambyRoleId !== null) {
-      const ambyRole = await guild.roles.fetch(server.ambyRoleId, false);
+    if (server.getAmbyColorRoleId() !== null) {
+      const ambyRole = await guild.roles.fetch(server.getAmbyColorRoleId(), false);
       embedColor = ambyRole.hexColor;
     } else {
       embedColor = '#ff1a1a';

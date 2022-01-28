@@ -3,10 +3,10 @@ import Command from '../../../definitions/Command';
 class GetCommand extends Command {
   /**
    * @constructor
-   * @param {CommandService} commandService
+   * @param {AmbyModel} model
    */
-  constructor(commandService) {
-    super(commandService, 'get', 'get <info tag>',
+  constructor(model) {
+    super(model, 'get', 'get <info tag>',
       'This is mostly for dallas to get the snowflakes he needs',
       '');
   }

@@ -3,10 +3,10 @@ import Command from '../../../definitions/Command';
 class PlayCommand extends Command {
   /**
    * @constructor
-   * @param {CommandService} commandService
+   * @param {AmbyModel} model
    */
-  constructor(commandService) {
-    super(commandService, 'play', 'play <game>',
+  constructor(model) {
+    super(model, 'play', 'play <game>',
       'Amby launches a twitch stream of the specified game',
       '');
   }
