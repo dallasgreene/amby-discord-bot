@@ -18,6 +18,7 @@ node_modules
 # for security reasons
 configuration/token_config*
 configuration/serverToken.json
+.add_homies_to_db
 
 # ignore compiled code
 dist/

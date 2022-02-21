@@ -1,4 +1,3 @@
-import collectionDefaults from '../../configuration/collectionDefaults.json';
 import constants from '../constants';
 import { Server } from '../models/Server';
 
@@ -41,25 +40,6 @@ class StartupService {
             ambyHighestRoleId, ambyRoleIds);
           return this.model.server.create(newServer);
         });
-    });
-  }
-
-  /**
-   * Initializes all the collections in the database by committing a default document.
-   * @return {Promise<void>}
-   */
-  async initCollections() {
-    return new Promise((resolve) => {
-      let currCollection = Promise.resolve();
-      Object.keys(collectionDefaults).forEach((collection) => {
-        currCollection = currCollection.then(() => (
-          this.dbService[collection].create(collectionDefaults[collection])
-            .catch((err) => {
-              console.log(`WARN: Unable to create default for collection "${collection}", err: ${err.message}\nIf this was a duplicate _id error, the collection has already been initialized and this message can be ignored.`);
-            })
-        ));
-      });
-      currCollection.then(() => resolve());
     });
   }
 }

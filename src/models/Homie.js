@@ -20,7 +20,7 @@ class Homie extends DataModel {
     this.snarkyResponses = snarkyResponses;
   }
 
-  static fromDocument(dao, document) {
+  static fromDocument(document) {
     return new Homie(document._id, document.isAdmin, document.realName, document.snarkyResponses);
   }
 

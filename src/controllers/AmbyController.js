@@ -1,6 +1,14 @@
 const message = require('../utils/message');
-const memberSnowflakes = require('../../configuration/memberSnowflakes.json');
-const responses = require('../../configuration/responses.json');
+
+const genericResponses = [
+  'No.',
+  'You goddang zoomers and your fortnite and your asking me to do things',
+  'I don\'t feel like it.',
+  'I don\'t WANT to',
+  'grrrrr',
+  'bro fr i aint doin that',
+  'thats so unchill of you',
+];
 
 class AmbyController {
   /**
@@ -33,10 +41,12 @@ class AmbyController {
     const prefix = server.getPrefix();
 
     // if msg author is one of the boys, theres a 0.5% chance they get memed on
-    if (Object.prototype.hasOwnProperty.call(memberSnowflakes, msg.member.id)
-        && Math.random() < 0.005) {
-      const responseArray = responses[memberSnowflakes[msg.member.id]];
-      message.send(msg.channel, responseArray[Math.floor(Math.random() * responseArray.length)]);
+    const isHomie = await this.model.homie.exists(msg.member.id);
+    if (isHomie && Math.random() < 0.005) {
+      const homie = await this.model.homie.findById(msg.member.id);
+      const snarkyResponses = homie.getSnarkyResponses();
+      message.send(msg.channel,
+        snarkyResponses[Math.floor(Math.random() * snarkyResponses.length)]);
       return;
     }
 
@@ -57,8 +67,7 @@ class AmbyController {
     if (command === this.lastCommand) {
       message.send(msg.channel, 'alright whatever');
     } else if (Math.random() < 0.05) {
-      const responsesList = responses.generic;
-      const response = responsesList[Math.floor(Math.random() * responsesList.length)];
+      const response = genericResponses[Math.floor(Math.random() * genericResponses.length)];
       message.send(msg.channel, response);
       this.lastCommand = command;
       return;
@@ -73,7 +82,7 @@ class AmbyController {
         message.send(msg.channel, commandResponse);
       } catch (err) {
         console.log(err);
-        message.send(msg.channel, 'There\'s been an error. Fix ur shit :b:allas');
+        message.send(msg.channel, 'There\'s been an error. Fix ur bot :b:allas');
       }
     } else {
       const response = `${message.spongeIt(msg.content.substring(prefix.length))} thats not even a thing dumb dumb`;

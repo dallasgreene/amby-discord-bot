@@ -1,9 +1,0 @@
-{
-  "server": {
-    "_id": "default",
-    "prefix": "!",
-    "ambyColorRoleId": null,
-    "ambyHighestRoleId": null,
-    "ambyRoleIds": []
-  }
-}
