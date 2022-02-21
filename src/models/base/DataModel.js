@@ -7,14 +7,6 @@ const notImplementedErrorMsg = 'This Data Model did not override a required meth
  */
 class DataModel {
   /**
-   * @constructor
-   * @param {MongooseDao} dao
-   */
-  constructor(dao) {
-    this.dao = dao;
-  }
-
-  /**
    * @return {*} the id that is the PK for this data.
    */
   getId() {
@@ -22,20 +14,10 @@ class DataModel {
   }
 
   /**
-   * @param {MongooseDao} dao
    * @param {Object} document
    * @return {DataModel} An instance of this class which represents the given document.
    */
-  static fromDocument(dao, document) {
-    throw new Error(notImplementedErrorMsg);
-  }
-
-  /**
-   * Should mutate this instance to correspond to the given document, then return this instance.
-   * @param {Object} document
-   * @return {DataModel} This instance which represents the given document.
-   */
-  syncWithDocument(document) {
+  static fromDocument(document) {
     throw new Error(notImplementedErrorMsg);
   }
 
@@ -44,19 +26,6 @@ class DataModel {
    */
   toDocument() {
     throw new Error(notImplementedErrorMsg);
-  }
-
-  create() {
-    return this.dao.create(this.toDocument()).then((doc) => this.syncWithDocument(doc));
-  }
-
-  update(obj) {
-    return this.dao.update(this.getId(), obj)
-      .then((doc) => this.syncWithDocument(doc));
-  }
-
-  delete() {
-    return this.dao.delete(this.getId());
   }
 }
 

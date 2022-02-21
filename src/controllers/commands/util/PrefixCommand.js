@@ -21,13 +21,12 @@ class PrefixCommand extends Command {
     if (args.length > 1) {
       return 'You can\'t use spaces in your prefix';
     }
-    const server = await this.model.getServerById(msg.guild.id);
     if (args.length === 0) {
       const newPrefix = this.getRandomPrefix();
-      await server.setPrefix(newPrefix);
+      await this.model.server.setPrefix(msg.guild.id, newPrefix);
       return 'You didn\'t provide a prefix so I made one up. Good luck figuring it out idiot';
     }
-    await server.setPrefix(args[0]);
+    await this.model.server.setPrefix(msg.guild.id, args[0]);
     return `Prefix changed to ${args[0]}`;
   }
 
@@ -36,7 +35,7 @@ class PrefixCommand extends Command {
    * @return {String}
    */
   getRandomPrefix() {
-    const possiblePrefixes = ['`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '-', '+', '=', '<', '>', 'shit'];
+    const possiblePrefixes = ['`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '-', '+', '=', '<', '>'];
     return possiblePrefixes[Math.floor(Math.random() * possiblePrefixes.length)];
   }
 }

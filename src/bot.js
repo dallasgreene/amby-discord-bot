@@ -24,7 +24,7 @@ const init = async () => {
     authSource: 'admin',
     dbName: 'amby-db',
   });
-  const model = new AmbyModel(mongoose);
+  const model = new AmbyModel();
   const startupService = new StartupService(model);
 
   const commandList = getCommandList(model);

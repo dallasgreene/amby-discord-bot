@@ -1,5 +1,6 @@
 import collectionDefaults from '../../configuration/collectionDefaults.json';
 import constants from '../constants';
+import { Server } from '../models/Server';
 
 class StartupService {
   /**
@@ -26,19 +27,19 @@ class StartupService {
 
       this.model.server.exists(guildId)
         .then((serverExists) => {
-          console.log('found existing server', guildId);
+          console.log('Amby belongs to server:', guildId);
           const ambyRoleManager = guild.member(ambyUserId).roles;
           const ambyColorRoleId = (ambyRoleManager.color) ? ambyRoleManager.color.id : null;
           const ambyHighestRoleId = (ambyRoleManager.highest) ? ambyRoleManager.highest.id : null;
           const ambyRoleIds = [...ambyRoleManager.cache.keys()];
 
           if (serverExists) {
-            return this.model.getServerById(guildId).then((server) => (
-              server.update({ ambyColorRoleId, ambyHighestRoleId, ambyRoleIds })
-            ));
+            return this.model.server.setAmbyRoles(guildId, ambyColorRoleId, ambyHighestRoleId,
+              ambyRoleIds);
           }
-          return this.model.createServer(guildId, constants.defaultPrefix, ambyColorRoleId,
+          const newServer = new Server(guildId, constants.defaultPrefix, ambyColorRoleId,
             ambyHighestRoleId, ambyRoleIds);
+          return this.model.server.create(newServer);
         });
     });
   }

@@ -1,38 +1,20 @@
 import MongooseDao from './base/MongooseDao';
 import DataModel from './base/DataModel';
 
-const serverSchema = {
-  _id: String,
-  prefix: String,
-  ambyColorRoleId: String,
-  ambyHighestRoleId: String,
-  ambyRoleIds: [String],
-};
-
-export class ServerDao extends MongooseDao {
-  /**
-   * @param {Mongoose} mongoose
-   */
-  constructor(mongoose) {
-    super(mongoose.model('ServerModel', mongoose.Schema(serverSchema, { collection: 'Server' })));
-  }
-}
-
 /**
  * Represents a Discord Server (aka Guild)
  */
 export class Server extends DataModel {
   /**
    * @constructor
-   * @param {ServerDao} dao
    * @param {String} snowflake
    * @param {String} prefix
    * @param {String} ambyColorRoleId
    * @param {String} ambyHighestRoleId
    * @param {String[]} ambyRoleIds
    */
-  constructor(dao, snowflake, prefix, ambyColorRoleId, ambyHighestRoleId, ambyRoleIds) {
-    super(dao);
+  constructor(snowflake, prefix, ambyColorRoleId, ambyHighestRoleId, ambyRoleIds) {
+    super();
     this.snowflake = snowflake;
     this.prefix = prefix;
     this.ambyColorRoleId = ambyColorRoleId;
@@ -40,18 +22,9 @@ export class Server extends DataModel {
     this.ambyRoleIds = ambyRoleIds;
   }
 
-  static fromDocument(dao, document) {
-    return new Server(dao, document._id, document.prefix, document.ambyColorRoleId,
+  static fromDocument(document) {
+    return new Server(document._id, document.prefix, document.ambyColorRoleId,
       document.ambyHighestRoleId, document.ambyRoleIds);
-  }
-
-  syncWithDocument(document) {
-    this.snowflake = document._id;
-    this.prefix = document.prefix;
-    this.ambyColorRoleId = document.ambyColorRoleId;
-    this.ambyHighestRoleId = document.ambyHighestRoleId;
-    this.ambyRoleIds = document.ambyRoleIds;
-    return this;
   }
 
   toDocument() {
@@ -76,32 +49,60 @@ export class Server extends DataModel {
     return this.prefix;
   }
 
-  setPrefix(newValue) {
-    return this.update({ prefix: newValue });
-  }
-
   getAmbyColorRoleId() {
     return this.ambyColorRoleId;
-  }
-
-  setAmbyColorRoleId(newValue) {
-    return this.update({ ambyColorRoleId: newValue });
   }
 
   getAmbyHighestRoleId() {
     return this.ambyHighestRoleId;
   }
 
-  setAmbyHighestRoleId(newValue) {
-    return this.update({ ambyHighestRoleId: newValue });
-  }
-
   getAmbyRoleIds() {
     return this.ambyRoleIds;
   }
+}
 
-  setAmbyRoleIds(newValue) {
-    return this.update({ ambyRoleIds: newValue });
+const serverSchema = {
+  _id: String,
+  prefix: String,
+  ambyColorRoleId: String,
+  ambyHighestRoleId: String,
+  ambyRoleIds: [String],
+};
+
+export class ServerDao extends MongooseDao {
+  constructor() {
+    super(serverSchema, 'Server', Server);
+  }
+
+  /**
+   * Updates the command prefix for the server with the given id.
+   * @param {String} serverId
+   * @param {String} prefix
+   * @return {Promise<Server>} The new server with the updated prefix.
+   */
+  async setPrefix(serverId, prefix) {
+    return new Promise((resolve, reject) => {
+      this.dbModel.findByIdAndUpdate(serverId, { $set: { prefix } }, { new: true }, (err, doc) => {
+        if (err !== null) {
+          reject(err);
+        } else {
+          resolve(this.dataModel.fromDocument(doc));
+        }
+      });
+    });
+  }
+
+  /**
+   * Updates the command prefix for the server with the given id.
+   * @param {String} serverId
+   * @param {String} ambyColorRoleId
+   * @param {String} ambyHighestRoleId
+   * @param {String[]} ambyRoleIds
+   * @return {Promise<Server>} The new server with the updated roles.
+   */
+  async setAmbyRoles(serverId, ambyColorRoleId, ambyHighestRoleId, ambyRoleIds) {
+    return this.updateDocument(serverId, { ambyColorRoleId, ambyHighestRoleId, ambyRoleIds });
   }
 }
 

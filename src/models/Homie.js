@@ -1,21 +1,6 @@
 import MongooseDao from './base/MongooseDao';
 import DataModel from './base/DataModel';
 
-const createHomieSchema = (mongoose) => (
-  mongoose.Schema({
-    _id: String,
-    isAdmin: Boolean,
-    realName: String,
-    snarkyResponses: [String],
-  }, { collection: 'Server' })
-);
-
-class HomieDao extends MongooseDao {
-  constructor(mongoose) {
-    super(mongoose, 'HomieModel', createHomieSchema);
-  }
-}
-
 /**
  * Represents a Discord user that I know in person.
  */
@@ -35,7 +20,7 @@ class Homie extends DataModel {
     this.snarkyResponses = snarkyResponses;
   }
 
-  static fromDocument(document) {
+  static fromDocument(dao, document) {
     return new Homie(document._id, document.isAdmin, document.realName, document.snarkyResponses);
   }
 
@@ -66,6 +51,19 @@ class Homie extends DataModel {
 
   getSnarkyResponses() {
     return this.snarkyResponses;
+  }
+}
+
+const homieSchema = {
+  _id: String,
+  isAdmin: Boolean,
+  realName: String,
+  snarkyResponses: [String],
+};
+
+export class HomieDao extends MongooseDao {
+  constructor() {
+    super(homieSchema, 'Homie', Homie);
   }
 }
 

@@ -1,10 +1,15 @@
+import mongoose from 'mongoose';
+
 class MongooseDao {
   /**
    * @constructor
-   * @param {Model} mongooseModel
+   * @param {Object} schema
+   * @param {String} collectionName
+   * @param {DataModel} dataModel (not an instance, the class extending DataModel)
    */
-  constructor(mongooseModel) {
-    this.dbModel = mongooseModel;
+  constructor(schema, collectionName, dataModel) {
+    this.dbModel = mongoose.model(`${collectionName}Model`, mongoose.Schema(schema, { collection: collectionName }));
+    this.dataModel = dataModel;
   }
 
   /**
@@ -15,7 +20,7 @@ class MongooseDao {
   async exists(id) {
     return new Promise((resolve, reject) => {
       this.dbModel.exists({ _id: id }, (err, wasFound) => {
-        if (err !== null) reject(new Error(`Error fetching document with id "${id}" from database: ${err}`));
+        if (err !== null) reject(err);
         else resolve(wasFound);
       });
     });
@@ -23,13 +28,13 @@ class MongooseDao {
 
   /**
    * Returns an array of all the documents in this collection.
-   * @return {Promise<Object[]>}
+   * @return {Promise<DataModel[]>}
    */
   async findAll() {
     return new Promise((resolve, reject) => {
       this.dbModel.find({ }, (err, docs) => {
-        if (err !== null) reject(new Error(`Error fetching documents from collection: ${err}`));
-        else resolve(docs);
+        if (err !== null) reject(err);
+        else resolve(docs.map((doc) => this.dataModel.fromDocument(doc)));
       });
     });
   }
@@ -37,15 +42,15 @@ class MongooseDao {
   /**
    * Returns the document that corresponds to the given id in this collection.
    * @param {*} id
-   * @return {Promise<Object>}
+   * @return {Promise<DataModel>}
    */
   async findById(id) {
     return new Promise((resolve, reject) => {
       this.dbModel.findById(id, (err, doc) => {
         if (err !== null) {
-          reject(new Error(`Error fetching document with id "${id}" from database: ${err}`));
+          reject(err);
         } else {
-          resolve(doc);
+          resolve(this.dataModel.fromDocument(doc));
         }
       });
     });
@@ -53,16 +58,17 @@ class MongooseDao {
 
   /**
    * Creates the given document in the database.
-   * @param {Object} data
-   * @return {Promise<Object>} The document created.
+   * @param {DataModel} data
+   * @return {Promise<DataModel>} The document created.
    */
   async create(data) {
     return new Promise((resolve, reject) => {
-      this.dbModel.create(data, (err, doc) => {
+      const dataDoc = data.toDocument();
+      this.dbModel.create(dataDoc, (err, doc) => {
         if (err !== null) {
-          reject(new Error(`Error creating document with id "${data._id}" in database: ${err}`));
+          reject(err);
         } else {
-          resolve(doc);
+          resolve(this.dataModel.fromDocument(doc));
         }
       });
     });
@@ -70,20 +76,53 @@ class MongooseDao {
 
   /**
    * Updates the document with the given id.
-   * @param {*} id
-   * @param {Object} data
-   * @return {Promise<Object>} The resulting updated document.
+   * @param {DataModel} data
+   * @return {Promise<DataModel>} The resulting updated document.
    */
-  async update(id, data) {
+  async update(data) {
     return new Promise((resolve, reject) => {
-      this.dbModel.findByIdAndUpdate(id, { $set: data }, { new: true }, (err, doc) => {
+      const dataDoc = data.toDocument();
+      delete dataDoc._id;
+      this.dbModel.findByIdAndUpdate(data.getId(), { $set: dataDoc }, { new: true }, (err, doc) => {
         if (err !== null) {
-          reject(new Error(`Error updating document with id "${id}" in database: ${err}`));
+          reject(err);
         } else {
-          resolve(doc);
+          resolve(this.dataModel.fromDocument(doc));
         }
       });
     });
+  }
+
+  /**
+   * Should only be used by inheriting classes, as this sets fields of the database document
+   * directly. External users should use the "update" method to take advantage of the more
+   * abstract data model.
+   * @param {*} id
+   * @param {Object} docObj
+   * @return {Promise<DataModel>} The resulting updated document.
+   */
+  async updateDocument(id, docObj) {
+    return new Promise((resolve, reject) => {
+      this.dbModel.findByIdAndUpdate(id, { $set: docObj }, { new: true }, (err, doc) => {
+        if (err !== null) {
+          reject(err);
+        } else {
+          resolve(this.dataModel.fromDocument(doc));
+        }
+      });
+    });
+  }
+
+  /**
+   * If the given instance exists in the database already, update it. Otherwise, create the given
+   * instance in the database.
+   * @param {DataModel} data
+   * @return {Promise<DataModel>}
+   */
+  async createOrUpdate(data) {
+    return this.exists(data.getId()).then((dataExists) => (
+      (dataExists) ? this.update(data) : this.create(data)
+    ));
   }
 
   /**
@@ -95,7 +134,7 @@ class MongooseDao {
     return new Promise((resolve, reject) => {
       this.dbModel.deleteOne({ _id: id }, (err) => {
         if (err !== null) {
-          reject(new Error(`Error deleting document with id "${id}" in database: ${err}`));
+          reject(err);
         } else {
           resolve();
         }

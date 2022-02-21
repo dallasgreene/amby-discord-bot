@@ -31,7 +31,7 @@ class CommandsCommand extends Command {
       return `The ${commandName} command does not exist.`;
     }
     const { guild } = msg;
-    const server = await this.model.getServerById(guild.id);
+    const server = await this.model.server.findById(guild.id);
 
     let embedColor = '';
     if (server.getAmbyColorRoleId() !== null) {

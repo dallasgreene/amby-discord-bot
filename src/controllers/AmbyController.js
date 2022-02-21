@@ -25,10 +25,10 @@ class AmbyController {
 
     const { guild } = msg;
     if (!guild.available) {
-      message.send(msg.channel, 'Guild was unavailable, Dallas check this shit out this is weird.');
+      message.send(msg.channel, 'Guild was unavailable, Dallas check this out this is weird.');
       return;
     }
-    const server = await this.model.getServerById(guild.id);
+    const server = await this.model.server.findById(guild.id);
     console.log('got server', server);
     const prefix = server.getPrefix();
 

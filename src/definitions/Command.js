@@ -24,7 +24,7 @@ class Command {
      */
   async help(msg) {
     const { guild } = msg;
-    const server = await this.model.getServerById(guild.id);
+    const server = await this.model.server.findById(guild.id);
 
     let embedColor = '';
     if (server.getAmbyColorRoleId() !== null) {
@@ -36,7 +36,7 @@ class Command {
 
     const response = new MessageEmbed()
       .setColor(embedColor)
-      .setTitle(server.prefix + this.usage);
+      .setTitle(server.getPrefix() + this.usage);
     if (this.helpText) response.addField('details:', this.helpText);
     else response.addField('details:', this.snippet);
 
