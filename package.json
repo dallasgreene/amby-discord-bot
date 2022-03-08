@@ -10,10 +10,13 @@
     "build-start": "npm run build; npm run start"
   },
   "dependencies": {
+    "@aws-sdk/client-ec2": "^3.52.0",
+    "@aws-sdk/client-sts": "^3.52.0",
     "@babel/cli": "^7.12.7",
     "@babel/core": "^7.12.7",
     "babel-preset-airbnb": "^5.0.0",
     "discord.js": "^12.5.0",
+    "minecraft-server-util": "^5.2.9",
     "mongoose": "^6.1.8"
   },
   "devDependencies": {

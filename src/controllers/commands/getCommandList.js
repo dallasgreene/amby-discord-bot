@@ -6,9 +6,10 @@ import CommandsCommand from './util/CommandsCommand';
  * Given a command service, initializes all commands available to Amby with the given service and
  * any aliases that have been defined.
  * @param {AmbyModel} model
+ * @param {EC2Client} awsClient
  * @returns {Object}
  */
-const getCommandList = (model) => {
+const getCommandList = (model, awsClient) => {
   const commandList = {};
 
   // initialize all of the commands defined in commandList.json
@@ -16,6 +17,9 @@ const getCommandList = (model) => {
     const command = new Command(model);
     commandList[command.getName()] = command;
   });
+
+  // initialize special commands which require additional things
+  commandList.mc.init(awsClient);
 
   // add the "commands" command separately because it needs to be passed the command list
   const commands = new CommandsCommand(model, commandList);

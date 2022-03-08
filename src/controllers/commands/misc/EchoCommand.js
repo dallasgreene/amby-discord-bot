@@ -7,7 +7,7 @@ class EchoCommand extends Command {
    */
   constructor(model) {
     super(model, 'echo', 'echo <message>',
-      'Amby repeats your message back to you, unless you\'re trying to @everyone, in which case cut that shit out',
+      'Amby repeats your message back to you, unless you\'re trying to @everyone, in which case cut that out',
       '');
   }
 

@@ -1,3 +1,5 @@
+import { EC2Client } from '@aws-sdk/client-ec2';
+import { fromIni } from '@aws-sdk/credential-provider-ini';
 import constants from '../constants';
 import { Server } from '../models/Server';
 
@@ -8,6 +10,12 @@ class StartupService {
    */
   constructor(model) {
     this.model = model;
+  }
+
+  async getAwsClient(awsAccessKeyId, awsSecretAccessKey) {
+    const credentials = fromIni({ profile: 'default' });
+    console.log(`${credentials}`);
+    return new EC2Client({ credentials, region: 'us-east-1' });
   }
 
   /**

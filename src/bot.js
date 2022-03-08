@@ -24,10 +24,12 @@ const init = async () => {
     authSource: 'admin',
     dbName: 'amby-db',
   });
+
   const model = new AmbyModel();
   const startupService = new StartupService(model);
+  const awsClient = await startupService.getAwsClient();
 
-  const commandList = getCommandList(model);
+  const commandList = getCommandList(model, awsClient);
 
   // start bot
   client.on('ready', () => (
