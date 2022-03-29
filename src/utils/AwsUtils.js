@@ -1,4 +1,4 @@
-import { StartInstancesCommand, StopInstancesCommand } from '@aws-sdk/client-ec2';
+import { StartInstancesCommand, StopInstancesCommand, DescribeInstanceStatusCommand } from '@aws-sdk/client-ec2';
 import McIdleChecker from './McIdleChecker';
 
 class AwsUtils {
@@ -8,6 +8,21 @@ class AwsUtils {
    */
   constructor(awsClient) {
     this.awsClient = awsClient;
+  }
+
+  /**
+   * Starts a minecraft server.
+   * @param {McServer} server
+   * @return {Promise<string>}
+   */
+  async statusMcServer(server) {
+    const data = await this.awsClient.send(
+      new DescribeInstanceStatusCommand({
+        IncludeAllInstances: true,
+        InstanceIds: [server.getInstanceId()],
+      }),
+    );
+    return `Status of ${server.getAlias()}: "${data.InstanceStatuses[0].InstanceState.Name}"`;
   }
 
   /**

@@ -1,4 +1,4 @@
-import util from 'minecraft-server-util';
+const util = require('minecraft-server-util');
 
 class McIdleChecker {
   /**
@@ -8,7 +8,9 @@ class McIdleChecker {
    */
   constructor(mcServer, awsUtils) {
     this.mcServer = mcServer;
+    console.log(mcServer);
     this.awsUtils = awsUtils;
+    this.checkInterval = 60; // in seconds
     this.isLastCheckIdle = false;
     this.timeout = null;
   }
@@ -24,13 +26,22 @@ class McIdleChecker {
 
   begin() {
     const isServerIdle = async (server, idleChecker) => {
-      const status = await util.status(server.getHost(), server.getPort(), { enableSRV: true });
+      console.log(server);
+      let status;
+      try {
+        status = await util.status(server.getHost(), server.getPort(), { enableSRV: true });
+      } catch (error) {
+        console.log(error);
+        return;
+      }
       console.log(status);
       if (status.players.online <= 0) {
         idleChecker.receivedIdleResponse();
+      } else if (idleChecker.isLastCheckIdle) {
+        idleChecker.isLastCheckIdle = false;
       }
     };
-    this.timeout = setInterval(isServerIdle, 600 * 1000, [this.mcServer, this]);
+    this.timeout = setInterval(isServerIdle, this.checkInterval * 1000, this.mcServer, this);
   }
 }
 

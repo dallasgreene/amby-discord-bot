@@ -12,7 +12,7 @@ class StartupService {
     this.model = model;
   }
 
-  async getAwsClient(awsAccessKeyId, awsSecretAccessKey) {
+  async getAwsClient() {
     const credentials = fromIni({ profile: 'default' });
     console.log(`${credentials}`);
     return new EC2Client({ credentials, region: 'us-east-1' });

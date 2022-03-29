@@ -38,9 +38,13 @@ class McCommand extends Command {
     if (subCommand === 'link') {
       return this.linkMcServer(args);
     }
+    if (args.length < 1) return 'You must also specify a server alias.';
     const server = await this.model.mcServer.findByAlias(args[0]);
     if (subCommand === 'info') {
       return this.infoMcServer(server);
+    }
+    if (subCommand === 'status') {
+      return this.statusMcServer(server);
     }
     if (subCommand === 'start') {
       return this.awsUtils.startMcServer(server);
@@ -54,6 +58,10 @@ class McCommand extends Command {
   async listMcServers() {
     const mcServers = await this.model.mcServer.findAll();
     return `${mcServers.map((server) => server.getAlias())}`;
+  }
+
+  async statusMcServer(server) {
+    return this.awsUtils.statusMcServer(server);
   }
 
   async infoMcServer(server) {

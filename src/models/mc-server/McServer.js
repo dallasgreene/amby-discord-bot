@@ -19,7 +19,7 @@ class McServer extends DataModel {
     this.alias = alias;
     this.host = host;
     this.port = port;
-    this.realName = modPack;
+    this.modPack = modPack;
     if (createdOn) {
       this.createdOn = createdOn;
     } else {
@@ -38,7 +38,7 @@ class McServer extends DataModel {
       alias: this.alias,
       host: this.host,
       port: this.port,
-      realName: this.modPack,
+      modPack: this.modPack,
       createdOn: this.createdOn,
     };
   }
