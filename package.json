@@ -17,7 +17,7 @@
     "babel-preset-airbnb": "^5.0.0",
     "discord.js": "^12.5.0",
     "minecraft-server-util": "^5.2.9",
-    "mongoose": "^6.1.8"
+    "mongoose": "^6.4.6"
   },
   "devDependencies": {
     "eslint": "^7.14.0",
