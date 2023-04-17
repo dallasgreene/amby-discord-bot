@@ -42,16 +42,22 @@ class AmbyController {
 
     // if msg author is one of the boys, theres a 0.5% chance they get memed on
     const isHomie = await this.model.homie.exists(msg.member.id);
-    if (isHomie && Math.random() < 0.005) {
-      const homie = await this.model.homie.findById(msg.member.id);
-      const snarkyResponses = homie.getSnarkyResponses();
-      message.send(msg.channel,
-        snarkyResponses[Math.floor(Math.random() * snarkyResponses.length)]);
-      return;
-    }
+    console.log('isHomie', isHomie)
+    // if (isHomie && Math.random() < 0.005) {
+    //   console.log('in here?')
+    //   const homie = await this.model.homie.findById(msg.member.id);
+    //   const snarkyResponses = homie.getSnarkyResponses();
+    //   message.send(msg.channel,
+    //     snarkyResponses[Math.floor(Math.random() * snarkyResponses.length)]);
+    //   return;
+    // }
+
+    console.log(msg);
 
     // ignore any message that does not start with prefix in the configuration file.
     if (msg.content.substring(0, prefix.length) !== prefix) return;
+
+    console.log('got this far');
 
     // array of everything after the prefix defined in the config
     const rest = msg.content.substring(prefix.length).trim().split(' ');

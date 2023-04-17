@@ -18,10 +18,11 @@ class MongooseDao {
    * @return {Promise<Boolean>}
    */
   async exists(id) {
+    console.log('exists called')
     return new Promise((resolve, reject) => {
       this.dbModel.exists({ _id: id }, (err, wasFound) => {
         if (err !== null) reject(err);
-        else resolve(wasFound);
+        else resolve(!!wasFound);
       });
     });
   }

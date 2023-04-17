@@ -1,4 +1,4 @@
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js-12';
 
 class Command {
   /**

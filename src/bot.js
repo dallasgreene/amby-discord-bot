@@ -1,4 +1,4 @@
-import Discord from 'discord.js';
+import Discord from 'discord.js-12';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import StartupService from './utils/StartupService';
